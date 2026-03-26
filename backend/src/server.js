@@ -3,41 +3,33 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
-const path = require('path'); // ✅ movido pra cima
+const path = require('path');
 const db = require('./database');
 console.log("MP_ACCESS_TOKEN:", process.env.MP_ACCESS_TOKEN);
-
 
 const crypto = require("crypto");
 
 const fetch = (...args) =>
   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-
 const { MercadoPagoConfig, Payment } = require("mercadopago");
 
 const mpClient = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 const mpPayment = new Payment(mpClient);
 
-
-const facebookPassport = require('./facebookAuth');
+// const facebookPassport = require('./facebookAuth');
 console.log(process.env.GOOGLE_CLIENT_ID);
 
 const app = express();
 
-// ==============================
-// MIDDLEWARES
-// ==============================
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 const passport = require('./googleAuth');
 
-app.use(facebookPassport.initialize());
-
+// app.use(facebookPassport.initialize());
 app.use(passport.initialize());
-
 
 // ==============================
 // MULTER (UPLOAD)
@@ -326,20 +318,23 @@ app.post('/passeios', upload.array('imagens', 10), (req, res) => {
 // ==============================
 app.get('/passeios', (req, res) => {
   const sql = `
-    SELECT 
-      p.id,
-      p.categoria,
-      p.local,
-      p.cidade,
-      p.estado,
-      p.descricao,
-      p.valor_final,
-      MIN(i.caminho) AS imagem
-    FROM passeios p
-    LEFT JOIN passeio_imagens i ON p.id = i.passeio_id
-    GROUP BY p.id
-    ORDER BY p.id DESC
-  `;
+  SELECT 
+    p.id,
+    p.categoria,
+    p.local,
+    p.cidade,
+    p.estado,
+    p.descricao,
+    p.valor_adulto,
+    p.valor_estudante,
+    p.valor_crianca,
+    p.valor_final,
+    MIN(i.caminho) AS imagem
+  FROM passeios p
+  LEFT JOIN passeio_imagens i ON p.id = i.passeio_id
+  GROUP BY p.id
+  ORDER BY p.id DESC
+`;
 
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: 'Erro ao listar passeios' });
@@ -743,6 +738,281 @@ app.get('/auth/google/callback',
 );
 
 
+app.get('/servicos', (req, res) => {
+  const sql = `
+    SELECT
+      id,
+      guia_id,
+      passeio_id,
+      nome,
+      descricao,
+      valor,
+      status,
+      foto,
+      criado_em
+    FROM servicos
+    ORDER BY criado_em DESC, id DESC
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Erro ao listar serviços' });
+    }
+
+    res.json(results);
+  });
+});
+
+
+
+
+
+app.post('/servicos', (req, res) => {
+  const {
+    guia_id,
+    passeio_id,
+    nome,
+    descricao,
+    valor,
+    status,
+    foto
+  } = req.body;
+
+  if (!guia_id || !passeio_id || !nome || !descricao || valor === undefined || valor === null) {
+    return res.status(400).json({ error: 'Dados obrigatórios não preenchidos' });
+  }
+
+  const sql = `
+    INSERT INTO servicos (
+      guia_id,
+      passeio_id,
+      nome,
+      descricao,
+      valor,
+      status,
+      foto
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sql,
+    [
+      guia_id,
+      passeio_id,
+      nome.trim(),
+      descricao.trim(),
+      Number(valor),
+      status || 'ativo',
+      foto || null
+    ],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Erro ao cadastrar serviço' });
+      }
+
+      res.status(201).json({
+        message: 'Serviço cadastrado com sucesso',
+        id: result.insertId
+      });
+    }
+  );
+});
+
+
+
+
+
+
+
+app.get('/api/agencias/:id', (req, res) => {
+  const { id } = req.params;
+
+  const sql = `
+    SELECT 
+      id,
+      nome_fantasia,
+      razao_social,
+      cnpj,
+      email,
+      homepage,
+      endereco,
+      bairro,
+      telefone,
+      celular,
+      status,
+      logo,
+      created_at
+    FROM agencias
+    WHERE id = ?
+    LIMIT 1
+  `;
+
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar agência:', err);
+      return res.status(500).json({
+        message: 'Erro interno ao buscar agência.'
+      });
+    }
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({
+        message: 'Agência não encontrada.'
+      });
+    }
+
+    return res.status(200).json(results[0]);
+  });
+});
+
+
+
+
+
+
+
+
+
+app.put('/api/agencias/:id', (req, res) => {
+  const { id } = req.params;
+
+  const {
+    nome_fantasia,
+    razao_social,
+    cnpj,
+    email,
+    homepage,
+    endereco,
+    bairro,
+    telefone,
+    celular,
+    status,
+    logo
+  } = req.body;
+
+  if (!nome_fantasia || !razao_social || !cnpj || !email || !endereco || !bairro || !celular) {
+    return res.status(400).json({
+      message: 'Preencha os campos obrigatórios.'
+    });
+  }
+
+  const sql = `
+    UPDATE agencias
+    SET
+      nome_fantasia = ?,
+      razao_social = ?,
+      cnpj = ?,
+      email = ?,
+      homepage = ?,
+      endereco = ?,
+      bairro = ?,
+      telefone = ?,
+      celular = ?,
+      status = ?,
+      logo = ?
+    WHERE id = ?
+  `;
+
+  const values = [
+    nome_fantasia,
+    razao_social,
+    cnpj,
+    email,
+    homepage || null,
+    endereco,
+    bairro,
+    telefone || null,
+    celular,
+    status || 'ativa',
+    logo || null,
+    id
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Erro ao atualizar agência:', err);
+
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({
+          message: 'CNPJ ou e-mail já cadastrado para outra agência.'
+        });
+      }
+
+      return res.status(500).json({
+        message: 'Erro interno ao atualizar agência.'
+      });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: 'Agência não encontrada para atualização.'
+      });
+    }
+
+    const selectSql = `
+      SELECT 
+        id,
+        nome_fantasia,
+        razao_social,
+        cnpj,
+        email,
+        homepage,
+        endereco,
+        bairro,
+        telefone,
+        celular,
+        status,
+        logo,
+        created_at
+      FROM agencias
+      WHERE id = ?
+      LIMIT 1
+    `;
+
+    db.query(selectSql, [id], (selectErr, results) => {
+      if (selectErr) {
+        console.error('Erro ao retornar agência atualizada:', selectErr);
+        return res.status(500).json({
+          message: 'Agência atualizada, mas houve erro ao retornar os dados.'
+        });
+      }
+
+      return res.status(200).json(results[0]);
+    });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
 // LOGIN COM FACEBOOK
 app.get('/auth/facebook/callback',
   facebookPassport.authenticate('facebook', { session: false }),
@@ -769,6 +1039,15 @@ app.get('/auth/facebook/callback',
 app.get('/auth/facebook',
   facebookPassport.authenticate('facebook', { scope: ['email'] })
 );
+
+
+
+
+
+*/
+
+
+
 
 // ==============================
 // PAGAMENTO PIX - CRIAR
@@ -1084,8 +1363,25 @@ app.get('/api/passeios', (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
 // ==============================
 const PORT = 3000;
+
+app.get('/teste-rota', (req, res) => {
+  res.send('rota ok');
+});
+
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
 });

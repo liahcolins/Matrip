@@ -221,6 +221,9 @@ logoutBtn?.addEventListener('click', () => {
   window.location.href = '/paginas/login1.html';
 });
 
+            
+
+//DIRECIONAMENTO DO BOTÃO "Minha Conta"
 
 document.addEventListener('click', function (e) {
   const btn = e.target.closest('#btnMinhaConta');
@@ -229,7 +232,7 @@ document.addEventListener('click', function (e) {
   e.preventDefault();
 
   const usuario = localStorage.getItem('usuario');
-  const tipo    = localStorage.getItem('tipo');
+  const tipo = (localStorage.getItem('tipo') || '').toLowerCase();
 
   // NÃO LOGADO
   if (!usuario || !tipo) {
@@ -237,7 +240,19 @@ document.addEventListener('click', function (e) {
     return;
   }
 
-  // LOGADO
+  // LOGADO: redireciona conforme o tipo
+  if (tipo === 'admin') {
+    window.location.href = '/paginas/admin/index.html';
+    return;
+  }
+
+  // TEMPORÁRIO: guia usa o dashboard parceiro
+  if (tipo === 'guia') {
+    window.location.href = '/paginas/parceiro/index.html';
+    return;
+  }
+
+  // usuário comum / turista
   window.location.href = '/paginas/dashboard.html';
 });
 
@@ -250,6 +265,16 @@ if (usuario) {
 if (usuario) {
   document.querySelector('#btnMinhaConta')?.classList.add('logged');
 }
+
+
+
+
+
+
+
+
+
+
 
 /*async function carregarComponente(seletor, arquivo) {
   const el = document.querySelector(seletor);

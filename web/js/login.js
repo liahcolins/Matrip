@@ -39,11 +39,6 @@ form.addEventListener("submit", async (e) => {
 
 
 
-
-
-
-
-
     // 🔁 REDIRECT APÓS LOGIN (corrigido)
     // 🔁 REDIRECIONAMENTO POR TIPO DE USUÁRIO
     // Temporariamente, usuários do tipo "guia" acessarão o dashboard do parceiro.
@@ -71,14 +66,6 @@ if (redirect) {
   // usuário comum (turista)
   window.location.href = "/index.html";
 }
-
-
-
-
-
-
-
-
 
 
 
