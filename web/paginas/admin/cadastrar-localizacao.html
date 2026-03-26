@@ -180,27 +180,7 @@
     </div>
   </div>
 
-  <script>
-    function toggleAccordion(id, headerElement) {
-        const content = document.getElementById(id);
-        
-        // Fecha outros que estiverem abertos (Opcional, se quiser que só um fique aberto por vez)
-        // document.querySelectorAll('.accordion-content').forEach(el => {
-        //    if(el.id !== id) el.classList.remove('show');
-        // });
-
-        content.classList.toggle('show');
-        headerElement.classList.toggle('active');
-    }
-
-    // Script de Logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('usuario');
-        window.location.href = '../../index.html';
-      });
-    }
-  </script>
+<script src="../../js/parceiro/sidebar.js"></script>
+<script src="../../js/admin/index-admin.js"></script>
 </body>
 </html>

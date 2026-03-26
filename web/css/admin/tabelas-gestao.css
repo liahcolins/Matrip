@@ -62,7 +62,7 @@
     line-height: 1;
 }
 
-/* Cores específicas (Ajuste conforme sua preferência) */
+/* Cores específicas */
 .btn-edit { background-color: #11c5b6 !important; color: white !important; }
 .btn-block { background-color: #fee2e2 !important; color: #ef4444 !important; }
 .btn-unblock { background-color: #dcfce7 !important; color: #22c55e !important; }
@@ -70,15 +70,3 @@
 
 /* Texto auxiliar soft */
 .text-soft { color: #94a3b8; font-size: 12px; }
-
-/* Badges de Status */
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.status-badge.active { background: #dcfce7; color: #15803d; }
-.status-badge.pending { background: #fef3c7; color: #b45309; }
-.status-badge.blocked { background: #fee2e2; color: #b91c1c; }

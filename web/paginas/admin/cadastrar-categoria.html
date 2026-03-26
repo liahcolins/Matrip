@@ -109,37 +109,7 @@
   </div>
 
   <script src="../../js/parceiro/sidebar.js"></script>
-  <script>
-    function toggleAccordion(id, headerElement) {
-      const content = document.getElementById(id);
-      content.classList.toggle('show');
-      headerElement.classList.toggle('active');
-    }
-
-    // Lógica de Usuário e Logout
-    document.addEventListener('DOMContentLoaded', () => {
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
-      if (!usuario || usuario.tipo !== 'admin') {
-        window.location.href = '../login1.html';
-      }
-      const emailSidebar = document.getElementById('adminEmail');
-      if (emailSidebar) emailSidebar.textContent = usuario.email;
-    });
-
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('usuario');
-        window.location.href = '../../index.html';
-      });
-    }
-
-    const form = document.getElementById('formCadastrarCategoria');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nome = document.getElementById('ma11nome').value;
-      alert(`Categoria "${nome}" enviada com sucesso!`);
-    });
-  </script>
+  <script src="../../js/admin/index-admin.js"></script>
+</body>
 </body>
 </html>

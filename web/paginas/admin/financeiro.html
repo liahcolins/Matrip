@@ -171,21 +171,6 @@
   </div>
 
   <script src="../../js/parceiro/sidebar.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
-      if (usuario && usuario.email) {
-        document.getElementById('adminEmail').textContent = usuario.email;
-      }
-    });
-
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('usuario');
-        window.location.href = '../../index.html';
-      });
-    }
-  </script>
+  <script src="../../js/admin/index-admin.js"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 /* css/admin/form-cadastros.css */
 
-/* Container Principal do Formulário */
+/* =========================================
+   CONTAINER E CABEÇALHOS
+   ========================================= */
 .panel {
     background: #ffffff;
     border-radius: 12px;
@@ -11,112 +13,22 @@
 
 .panel-header h2 {
     margin: 0 0 25px 0;
-    color: #023847; /* Seu azul escuro */
+    color: #023847;
     font-size: 1.5rem;
     font-weight: 700;
 }
 
-/* O Grid que organiza as colunas (2 por linha por padrão) */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(48%, 1fr));
-    gap: 20px 4%; /* Espaçamento entre os campos */
-}
-
-/* Estilo de cada bloco (Label + Input) */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
-/* Campo que ocupa a linha inteira */
-.form-group-full {
-    grid-column: 1 / -1;
-}
-
-/* Estilo das Labels (Nomes dos campos) */
-.form-group label {
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #023847;
-}
-
-/* Estilo dos Inputs, Selects e Placeholders */
-.form-group input, 
-.form-group select {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: #333;
-    transition: all 0.2s ease;
-}
-
-.form-group input:focus, 
-.form-group select:focus {
-    border-color: #11c5b6; /* Borda Turquesa no clique */
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(17, 197, 182, 0.1);
-}
-
-.form-group input::placeholder {
-    color: #aaa;
-}
-
-/* Área dos Botões */
-.form-actions {
-    margin-top: 30px;
-    display: flex;
-    justify-content: flex-end; /* Botões na direita */
-    gap: 15px; /* Espaço entre eles */
-    border-top: 1px solid #eee;
-    padding-top: 20px;
-}
-
-/* Botões (Reutilizando os estilos que você já deve ter no index.css) */
-/* Se você não tiver no index.css, cole estes aqui também */
-.primary-btn {
-    background: #11c5b6; /* Turquesa */
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.primary-btn:hover {
-    background: #0ea699;
-}
-
-.secondary-btn {
-    background: #f1f3f5;
-    color: #023847;
-    border: 1px solid #ddd;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none; /* Se for um link <a> */
-}
-
-.secondary-btn:hover {
-    background: #e9ecef;
-}
-
-/* Estilo do link de voltar */
-/* Container da navegação para alinhar com o título */
+/* =========================================
+   NAVEGAÇÃO DO TOPO (BOTÃO VOLTAR)
+   ========================================= */
 .topbar-navigation {
     display: flex;
     align-items: center;
     gap: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
-/* Botão Circular de Voltar */
 .back-button-circle {
     display: flex;
     align-items: center;
@@ -124,11 +36,11 @@
     width: 40px;
     height: 40px;
     background-color: #f1f3f5;
-    color: #11c5b6; /* Seu Turquesa */
+    color: #11c5b6;
     border-radius: 50%;
     text-decoration: none;
     transition: all 0.2s ease;
-    flex-shrink: 0; /* Impede que o botão amasse */
+    flex-shrink: 0;
 }
 
 .back-button-circle:hover {
@@ -142,68 +54,92 @@
     font-weight: bold;
 }
 
-/* Ajuste no título para não ficar colado */
 .topbar-title h1 {
     margin: 0;
     font-size: 1.5rem;
 }
 
-/* Container da Tabela */
-.table-container {
-    overflow-x: auto;
-    margin-top: 15px;
+/* =========================================
+   ESTILOS DO FORMULÁRIO (GRID E INPUTS)
+   ========================================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
-.admin-table th {
-    background-color: #f8f9fa;
-    color: #023847;
-    padding: 12px 15px;
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
     font-weight: 700;
-    border-bottom: 2px solid #11c5b6; /* Linha turquesa no cabeçalho */
+    font-size: 14px;
+    color: #023847;
 }
 
-.admin-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #eee;
-    color: #444;
-    font-size: 0.9rem;
+/* Campos de entrada padrão */
+.form-group input,
+.form-group select {
+    height: 46px;
+    padding: 0 15px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    color: #023847;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-.admin-table tr:hover {
-    background-color: #f1fcfb; /* Destaque suave ao passar o mouse */
+/* Campo de texto grande (Descrição) */
+.form-group textarea {
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    color: #023847;
+    outline: none;
+    resize: vertical;
+    transition: all 0.3s ease;
 }
 
-/* Botões de Ação na Tabela */
-.action-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: transform 0.2s;
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #aaa;
 }
 
-.action-btn.edit { color: #11c5b6; }
-.action-btn.delete { color: #e74c3c; }
-
-.action-btn:hover {
-    transform: scale(1.2);
+/* Efeito ao clicar no campo (Focus) */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #11c5b6;
+    box-shadow: 0 0 0 3px rgba(17, 197, 182, 0.15);
 }
 
-.action-btn span {
-    font-size: 20px;
+/* Área inferior com os botões Salvar/Cancelar */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
 }
 
-/* Estilo do Cabeçalho do Accordion */
-/* Accordion Styles - Versão Slim */
-/* Accordion Styles - Versão Slim sem mexer no tamanho da fonte */
-
-/* Removemos o padding exagerado do painel apenas quando ele for um accordion */
+/* =========================================
+   ACCORDION (SANFONA)
+   ========================================= */
 .panel:has(.accordion-header) {
     padding: 10px 25px !important; 
 }
@@ -213,14 +149,12 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    padding: 5px 0; /* Padding vertical bem pequeno para a barra ficar fina */
+    padding: 5px 0;
 }
 
-/* Deixando o H2 livre para ser o que ele já era nas outras telas */
 .accordion-header h2 {
     margin: 0;
     color: #023847;
-    /* Removida a linha de font-size para manter o original */
 }
 
 .accordion-header .arrow {
@@ -234,113 +168,30 @@
 }
 
 .accordion-content {
+    display: none;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-}
-
-/* O respiro só aparece quando o formulário é revelado */
-.accordion-content.show {
-    max-height: 800px;
-    padding: 20px 0 10px 0;
-    border-top: 1px solid #eee; /* Linha sutil para separar do formulário */
-    margin-top: 10px;
-}
-
-/* Garante que o conteúdo da sanfona apareça suavemente */
-.accordion-content {
-    display: none;
     padding: 20px;
     border-top: 1px solid #f1f5f9;
-    animation: slideDown 0.3s ease-out;
 }
 
 .accordion-content.show {
     display: block;
-}
-
-/* Roda a setinha quando ativo */
-.accordion-header.active .arrow {
-    transform: rotate(180deg);
+    max-height: 800px;
+    padding: 20px 0 10px 0;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
 }
 
 /* =========================================
-   ESTILOS PARA FORMULÁRIOS DE CADASTRO
+   RESPONSIVIDADE (MOBILE)
    ========================================= */
-
-/* Grid do Formulário (Divide em 2 colunas lado a lado) */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-/* Grupo de Input (Espaçamento entre a Label e o Campo) */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-/* Estilo das Labels (Títulos de cada campo) */
-.form-group label {
-    font-weight: 700;
-    font-size: 14px;
-    color: #023847; /* Azul escuro Matrip */
-}
-
-/* Estilo das "Barras" (Inputs e Selects com borda arredondada) */
-.form-group input,
-.form-group select {
-    height: 46px; /* Altura exata da barra */
-    padding: 0 15px; /* Espaço interno para o texto não colar na borda */
-    border-radius: 12px; /* O segredo para ficar arredondado! */
-    border: 1px solid #e5e7eb; /* Borda cinza clarinha */
-    background-color: #ffffff;
-    font-family: inherit;
-    font-size: 14px;
-    color: #023847;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-/* Estilo específico para a Caixa de Texto de Descrição (Textarea) */
-.form-group textarea {
-    padding: 15px;
-    border-radius: 12px; /* Arredondado igual os inputs */
-    border: 1px solid #e5e7eb;
-    background-color: #ffffff;
-    font-family: inherit;
-    font-size: 14px;
-    color: #023847;
-    outline: none;
-    resize: vertical; /* Permite aumentar a caixa só para baixo */
-    transition: all 0.3s ease;
-}
-
-/* Efeito ao clicar no campo (Focus) - Borda Turquesa */
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: #11c5b6; /* Turquesa Matrip */
-    box-shadow: 0 0 0 3px rgba(17, 197, 182, 0.15); /* Sombra turquesa suave ao redor */
-}
-
-/* Garante que itens com span 2 ocupem a tela toda em telas menores */
 @media (max-width: 768px) {
     .form-grid {
-        grid-template-columns: 1fr; /* Vira 1 coluna no celular */
+        grid-template-columns: 1fr;
     }
     .form-group[style*="grid-column: span 2"] {
         grid-column: span 1 !important;
     }
-}
-
-/* Engrossando a barra dos cadastros para ficar igual à Central */
-.topbar-navigation {
-    display: flex;
-    align-items: center;
-    padding-top: 6px;    /* Aumente ou diminua esse valor se precisar */
-    padding-bottom: 6px; /* Aumente ou diminua esse valor se precisar */
 }

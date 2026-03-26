@@ -202,28 +202,6 @@
   </div>
 
   <script src="../../js/parceiro/sidebar.js"></script>
-  <script>
-    function toggleAccordion(id, headerElement) {
-      const content = document.getElementById(id);
-      content.classList.toggle('show');
-      headerElement.classList.toggle('active');
-    }
-
-    // Carregar e-mail admin
-    document.addEventListener('DOMContentLoaded', () => {
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
-      if (usuario && usuario.email) {
-        document.getElementById('adminEmail').textContent = usuario.email;
-      }
-    });
-
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('usuario');
-        window.location.href = '../../index.html';
-      });
-    }
-  </script>
+  <script src="../../js/admin/index-admin.js"></script>
 </body>
 </html>
