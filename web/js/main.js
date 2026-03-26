@@ -257,7 +257,6 @@ document.addEventListener('click', function (e) {
 });
 
 const usuario = localStorage.getItem('usuario');
-
 if (usuario) {
   const span = document.querySelector('#btnMinhaConta span');
   if (span) span.textContent = 'Painel';
