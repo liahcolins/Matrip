@@ -59,12 +59,14 @@
       <main class="content">
         
         <section class="panel">
-          <div class="accordion-header" onclick="toggleAccordion('formCat', this)">
-            <h2>Cadastrar Nova Categoria</h2>
-            <span class="material-symbols-outlined arrow">expand_more</span>
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Categorias Cadastradas</h2>
+            <button class="primary-btn" onclick="toggleFormulario('formCat')" style="display: flex; align-items: center; gap: 5px;">
+              <span class="material-symbols-outlined" style="font-size: 20px;">add</span> Nova Categoria
+            </button>
           </div>
-          
-          <div id="formCat" class="accordion-content">
+
+          <div id="formCat" style="display: none; background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
             <form id="formCadastrarCategoria">
               <div class="form-grid" style="grid-template-columns: 1fr;">
                 <div class="form-group">
@@ -73,32 +75,27 @@
                 </div>
               </div>
 
-              <div class="form-actions">
+              <div class="form-actions" style="margin-top: 15px;">
                 <button type="submit" class="primary-btn">Salvar Categoria</button>
+                <button type="button" class="secondary-btn" onclick="toggleFormulario('formCat')">Cancelar</button>
               </div>
             </form>
           </div>
-        </section>
 
-        <section class="panel" style="margin-top: 20px;">
-          <div class="panel-header">
-            <h2>Categorias Cadastradas</h2>
-          </div>
           <div class="table-wrapper">
             <table class="admin-table">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>Nome da Categoria</th>
                   <th style="width: 120px; text-align: right;">Ações</th>
                 </tr>
               </thead>
               <tbody id="listaCategorias">
-                <tr><td>1</td><td>Passeios</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>2</td><td>Aventuras</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>3</td><td>Culinária</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>4</td><td>Cultural</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>5</td><td>Ecoturismo</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
+                <tr><td>Passeios</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
+                <tr><td>Aventuras</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
+                <tr><td>Culinária</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
+                <tr><td>Cultural</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
+                <tr><td>Ecoturismo</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
               </tbody>
             </table>
           </div>
@@ -110,6 +107,6 @@
 
   <script src="../../js/parceiro/sidebar.js"></script>
   <script src="../../js/admin/index-admin.js"></script>
-</body>
+  <script src="../../js/admin/cadastros.js"></script>
 </body>
 </html>

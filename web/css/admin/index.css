@@ -1,8 +1,8 @@
 /* Variáveis de Cores Exclusivas do Admin */
 :root {
   /* Fundo da Sidebar vira Amarelo Escuro */
-  --color-sidebar: #d4a000; 
-  --color-sidebar-hover: #b38600; /* Um tom um pouco mais escuro para o hover */
+  --color-sidebar: #CF8309; 
+  --color-sidebar-hover: #b06f07; /* Um tom um pouco mais escuro para o hover */
   
   /* Botões e Itens Ativos continuam Azul Escuro */
   --color-primary: #023847; 
@@ -139,7 +139,7 @@
 
 /* Ajuste do container abaixo da barra */
 .dashboard-container {
-  height: calc(100vh - 100px); /* 100px compensa o tamanho do novo header com a logo grande */
+  min-height: calc(100vh - 100px); 
 }
 
 /* ================= BARRA LATERAL ================= */
@@ -380,4 +380,29 @@
   gap: 20px;
   width: 100%;
   margin-bottom: 25px;
+}
+
+/* ==========================================================================
+   PADRONIZAÇÃO DA TOPBAR (CABEÇALHO DAS PÁGINAS)
+   ========================================================================== */
+.topbar {
+    display: flex;
+    align-items: center;
+    min-height: 90px; /* Força TODAS as barras a terem essa grossura mínima */
+    padding: 15px 30px; /* Dá um respiro padrão em cima e embaixo */
+    box-sizing: border-box;
+}
+
+/* Trava as margens dos títulos para não empurrarem a barra */
+.topbar-title h1 {
+    margin: 0 0 5px 0 !important; /* Zera em cima, deixa 5px embaixo */
+    font-size: 26px !important;
+    color: #023847;
+    line-height: 1.2;
+}
+
+.topbar-title p {
+    margin: 0 !important; /* Zera todas as margens do subtítulo */
+    color: #64748b;
+    font-size: 14px;
 }
