@@ -1,6 +1,10 @@
 .sidebar {
   width: var(--sidebar-width);
+<<<<<<< HEAD
   min-height: 100vh;
+=======
+  min-height: calc(100vh - var(--brandbar-height));
+>>>>>>> dash_cliente-barra_padronizada
   background: var(--color-sidebar);
   color: #fff;
   display: flex;
@@ -8,6 +12,7 @@
   justify-content: space-between;
   padding: 22px 18px;
   position: sticky;
+<<<<<<< HEAD
   top: 0;
 }
 
@@ -38,11 +43,25 @@
 .brand-text p {
   font-size: 14px;
   color: #cde7eb;
+=======
+  top: var(--brandbar-height);
+}
+
+/* Espaço superior da sidebar sem a marca */
+.sidebar-top {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: flex-end;
+>>>>>>> dash_cliente-barra_padronizada
 }
 
 .sidebar-close {
   display: none;
+<<<<<<< HEAD
   margin-top: 14px;
+=======
+  margin-top: 0;
+>>>>>>> dash_cliente-barra_padronizada
   border: none;
   background: transparent;
   color: #fff;
@@ -60,9 +79,15 @@
 .menu-item {
   display: flex;
   align-items: center;
+<<<<<<< HEAD
   gap: 12px;
   padding: 14px 14px;
   border-radius: 12px;
+=======
+  gap: 14px;
+  padding: 14px 14px;
+  border-radius: 14px;
+>>>>>>> dash_cliente-barra_padronizada
   color: #e9f7fa;
   text-decoration: none;
   font-weight: 600;
@@ -76,6 +101,13 @@
 .menu-item.active {
   background: var(--color-primary);
   color: #fff;
+}
+
+.menu-icon {
+  width: 18px;
+  min-width: 18px;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .sidebar-footer {
@@ -120,9 +152,16 @@
   .sidebar {
     position: fixed;
     left: -100%;
+<<<<<<< HEAD
     top: 0;
     z-index: 999;
     width: 280px;
+=======
+    top: var(--brandbar-height);
+    z-index: 999;
+    width: 280px;
+    min-height: calc(100vh - var(--brandbar-height));
+>>>>>>> dash_cliente-barra_padronizada
     transition: left 0.25s ease;
   }
 

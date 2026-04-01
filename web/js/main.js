@@ -3,9 +3,9 @@
 // ==============================
 function carregarComponente(seletor, caminho) {
   const elemento = document.querySelector(seletor);
-  if (!elemento) return;
+  if (!elemento) return Promise.resolve();
 
-  fetch(caminho)
+  return fetch(caminho)
     .then(res => {
       if (!res.ok) throw new Error(`Erro ao carregar ${caminho}`);
       return res.text();
@@ -13,19 +13,19 @@ function carregarComponente(seletor, caminho) {
     .then(html => {
       elemento.innerHTML = html;
 
-      // ✅ Inicializa componentes específicos após a injeção
       if (seletor === "#carrossel-container") {
-      // monta os slides via API (se existir o script)
-      if (window.initCarrosselDinamico) {
-        window.initCarrosselDinamico().then(() => {
+        if (window.initCarrosselDinamico) {
+          return window.initCarrosselDinamico().then(() => {
+            inicializarCarrossel();
+          });
+        } else {
           inicializarCarrossel();
-        });
-      } else {
-        inicializarCarrossel();
+        }
       }
-    }
 
-      if (seletor === "#flashcards-container") ativarScrollReveal();
+      if (seletor === "#flashcards-container") {
+        ativarScrollReveal();
+      }
     })
     .catch(err => console.error(err));
 }
@@ -33,16 +33,17 @@ function carregarComponente(seletor, caminho) {
 // ==============================
 // ⚙️ CARREGAMENTO INICIAL
 // ==============================
-document.addEventListener("DOMContentLoaded", () => {
-  carregarComponente("#navbar-container", "/navbar.html");
-  carregarComponente("#carrossel-container", "/paginas/carrossel.html");
-  carregarComponente("#flashcards-container", "/paginas/flashcards.html");
-  carregarComponente("#footer-container", "/footer.html");
+document.addEventListener("DOMContentLoaded", async () => {
+  await carregarComponente("#navbar-container", "/navbar.html");
+  await carregarComponente("#carrossel-container", "/paginas/carrossel.html");
+  await carregarComponente("#flashcards-container", "/paginas/flashcards.html");
+  await carregarComponente("#footer-container", "/footer.html");
 
   ativarRevealParceiros();
   configurarBotaoTopo();
   pausarCarrosselParceiros();
   configurarBotoesVerMais();
+  atualizarEstadoNavbar();
 });
 
 // ==============================
@@ -55,18 +56,18 @@ window.addEventListener("load", () => window.scrollTo(0, 0));
 // 🎠 INICIALIZAÇÃO DO CARROSSEL BOOTSTRAP
 // ==============================
 function inicializarCarrossel() {
-  const myCarousel = document.querySelector('#carouselExampleCaptions');
-  if (!myCarousel) return;
+  const myCarousel = document.querySelector("#carouselExampleCaptions");
+  if (!myCarousel || typeof bootstrap === "undefined") return;
 
   new bootstrap.Carousel(myCarousel, {
-    interval: 5000, // ⏱️ tempo entre slides (ms)
-    ride: 'carousel', // inicia automaticamente
-    pause: false // não pausa ao passar o mouse
+    interval: 5000,
+    ride: "carousel",
+    pause: false
   });
 }
 
 // ==============================
-// 🌟 ANIMAÇÃO AO ROLAR (Scroll Reveal)
+// 🌟 ANIMAÇÃO AO ROLAR
 // ==============================
 function ativarScrollReveal() {
   const cards = document.querySelectorAll(".card");
@@ -101,7 +102,7 @@ function configurarBotaoTopo() {
 }
 
 // ==============================
-// 🤝 ANIMAÇÃO DOS PARCEIROS (reveal ao rolar)
+// 🤝 REVEAL DOS PARCEIROS
 // ==============================
 function ativarRevealParceiros() {
   const elementos = document.querySelectorAll(".reveal");
@@ -120,7 +121,7 @@ function ativarRevealParceiros() {
 }
 
 // ==============================
-// 🤝 CARROSSEL DE PARCEIROS (pausar ao passar o mouse)
+// 🤝 CARROSSEL DE PARCEIROS
 // ==============================
 function pausarCarrosselParceiros() {
   const carousel = document.querySelector(".carousel-logos");
@@ -141,7 +142,6 @@ function configurarBotoesVerMais() {
   document.body.addEventListener("click", e => {
     const btn = e.target;
 
-    // Clique no botão "Ver mais"
     if (btn.classList.contains("btn-vermais")) {
       const categoria = btn.closest(".categoria");
       const extras = categoria?.querySelector(".extras");
@@ -150,9 +150,8 @@ function configurarBotoesVerMais() {
       extras.classList.toggle("show");
 
       if (extras.classList.contains("show")) {
-        btn.style.display = "none"; // esconde botão original
+        btn.style.display = "none";
 
-        // Cria o container dos novos botões
         const actions = document.createElement("div");
         actions.classList.add("btn-actions");
 
@@ -167,7 +166,6 @@ function configurarBotoesVerMais() {
         actions.append(btnMenos, btnTudo);
         categoria.append(actions);
 
-        // animação suave dos cards extras
         extras.querySelectorAll(".card").forEach((card, i) => {
           card.style.opacity = "0";
           card.style.transform = "translateY(20px)";
@@ -180,21 +178,21 @@ function configurarBotoesVerMais() {
       }
     }
 
-    // Clique em "Ver menos"
     if (btn.classList.contains("btn-vermenos")) {
       const categoria = btn.closest(".categoria");
       const extras = categoria?.querySelector(".extras");
       const btnVerMais = categoria?.querySelector(".btn-vermais");
-      categoria?.querySelector(".btn-actions")?.remove();
 
+      categoria?.querySelector(".btn-actions")?.remove();
       extras?.classList.remove("show");
+
       if (btnVerMais) btnVerMais.style.display = "inline-block";
     }
 
-    // Clique em "Ver tudo"
     if (btn.classList.contains("btn-vertudo")) {
       document.querySelectorAll(".categoria .extras").forEach(ex => {
         ex.classList.add("show");
+
         ex.querySelectorAll(".card").forEach((card, i) => {
           card.style.opacity = "0";
           card.style.transform = "translateY(20px)";
@@ -212,86 +210,62 @@ function configurarBotoesVerMais() {
   });
 }
 
-const logoutBtn = document.getElementById('logoutBtn');
+// ==============================
+// 🔐 NAVBAR / LOGIN / LOGOUT
+// ==============================
+function atualizarEstadoNavbar() {
+  const usuario = localStorage.getItem("usuario");
+  const btnMinhaConta = document.querySelector("#btnMinhaConta");
+  const span = document.querySelector("#btnMinhaConta span");
 
-logoutBtn?.addEventListener('click', () => {
-  localStorage.removeItem('usuario');
-  localStorage.removeItem('tipo');
+  if (span) {
+    span.textContent = "Minha Conta";
+  }
 
-  window.location.href = '/paginas/login1.html';
-});
+  if (usuario && btnMinhaConta) {
+    btnMinhaConta.classList.add("logged");
+  }
+}
 
-            
+document.addEventListener("click", function (e) {
+  const logoutBtn = e.target.closest("#logoutBtn, .logout-btn");
+  if (logoutBtn) {
+    e.preventDefault();
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("tipo");
+    localStorage.removeItem("usuarioLogado");
+    localStorage.removeItem("redirectAfterLogin");
+    window.location.href = "/paginas/login1.html";
+    return;
+  }
 
-//DIRECIONAMENTO DO BOTÃO "Minha Conta"
-
-document.addEventListener('click', function (e) {
-  const btn = e.target.closest('#btnMinhaConta');
+  const btn = e.target.closest("#btnMinhaConta");
   if (!btn) return;
 
   e.preventDefault();
 
-  const usuario = localStorage.getItem('usuario');
-  const tipo = (localStorage.getItem('tipo') || '').toLowerCase();
+  const usuario = localStorage.getItem("usuario");
+  const tipo = (localStorage.getItem("tipo") || "").toLowerCase();
 
-  // NÃO LOGADO
   if (!usuario || !tipo) {
-    window.location.href = '/paginas/login1.html';
+    window.location.href = "/paginas/login1.html";
     return;
   }
 
-  // LOGADO: redireciona conforme o tipo
-  if (tipo === 'admin') {
-    window.location.href = '/paginas/admin/index.html';
+  if (tipo === "admin") {
+    window.location.href = "/paginas/admin/index.html";
     return;
   }
 
-  // TEMPORÁRIO: guia usa o dashboard parceiro
-  if (tipo === 'guia') {
-    window.location.href = '/paginas/parceiro/index.html';
+  if (tipo === "guia") {
+    window.location.href = "/paginas/parceiro/index.html";
     return;
   }
 
-  // usuário comum / turista
-  window.location.href = '/paginas/dashboard.html';
-});
-
-const usuario = localStorage.getItem('usuario');
-if (usuario) {
-  const span = document.querySelector('#btnMinhaConta span');
-  if (span) span.textContent = 'Painel';
+  if (tipo === "usuario") {
+    window.location.href = "/paginas/cliente/index.html";
+    return;
 }
 
-if (usuario) {
-  document.querySelector('#btnMinhaConta')?.classList.add('logged');
-}
-
-
-
-
-
-
-
-
-
-
-
-/*async function carregarComponente(seletor, arquivo) {
-  const el = document.querySelector(seletor);
-  const resp = await fetch(arquivo);
-  el.innerHTML = await resp.text();
-}*/
-
-document.addEventListener("DOMContentLoaded", async () => {
-  await carregarComponente("#navbar-container", "/components/navbar.html");
-
-  // 1) injeta o carrossel
-  await carregarComponente("#carrossel-container", "/components/carrossel.html");
-
-  // 2) só depois monta ele com dados do banco
-  if (window.initCarrosselDinamico) {
-    window.initCarrosselDinamico();
-  }
-
-  await carregarComponente("#footer-container", "/components/footer.html");
+  window.location.href = "/paginas/login1.html";
 });
