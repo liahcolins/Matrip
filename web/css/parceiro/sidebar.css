@@ -1,10 +1,6 @@
 .sidebar {
   width: var(--sidebar-width);
-<<<<<<< HEAD
-  min-height: 100vh;
-=======
   min-height: calc(100vh - var(--brandbar-height));
->>>>>>> dash_cliente-barra_padronizada
   background: var(--color-sidebar);
   color: #fff;
   display: flex;
@@ -12,38 +8,6 @@
   justify-content: space-between;
   padding: 22px 18px;
   position: sticky;
-<<<<<<< HEAD
-  top: 0;
-}
-
-.sidebar-top {
-  margin-bottom: 24px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.brand-logo {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 6px;
-}
-
-.brand-text h2 {
-  font-size: 22px;
-  margin-bottom: 2px;
-}
-
-.brand-text p {
-  font-size: 14px;
-  color: #cde7eb;
-=======
   top: var(--brandbar-height);
 }
 
@@ -52,16 +16,11 @@
   margin-bottom: 12px;
   display: flex;
   justify-content: flex-end;
->>>>>>> dash_cliente-barra_padronizada
 }
 
 .sidebar-close {
   display: none;
-<<<<<<< HEAD
-  margin-top: 14px;
-=======
   margin-top: 0;
->>>>>>> dash_cliente-barra_padronizada
   border: none;
   background: transparent;
   color: #fff;
@@ -79,15 +38,9 @@
 .menu-item {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
-  gap: 12px;
-  padding: 14px 14px;
-  border-radius: 12px;
-=======
   gap: 14px;
   padding: 14px 14px;
   border-radius: 14px;
->>>>>>> dash_cliente-barra_padronizada
   color: #e9f7fa;
   text-decoration: none;
   font-weight: 600;
@@ -152,16 +105,10 @@
   .sidebar {
     position: fixed;
     left: -100%;
-<<<<<<< HEAD
-    top: 0;
-    z-index: 999;
-    width: 280px;
-=======
     top: var(--brandbar-height);
     z-index: 999;
     width: 280px;
     min-height: calc(100vh - var(--brandbar-height));
->>>>>>> dash_cliente-barra_padronizada
     transition: left 0.25s ease;
   }
 
