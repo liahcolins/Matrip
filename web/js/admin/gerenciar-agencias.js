@@ -1,8 +1,8 @@
-// Dados temporários para testar a tela
+// Dados temporários para testar a tela (Sem IDs)
 let allAgencias = [
-  { id: 1, razao_social: "Aventuras Maranhão LTDA", nome_fantasia: "Aventuras MA", cnpj: "12.345.678/0001-90", email: "contato@aventuras.com", telefone: "(98) 99999-1111", status: "ativo", passeios_ativos: 12 },
-  { id: 2, razao_social: "Lençóis Turismo EIRELI", nome_fantasia: "Lençóis Tour", cnpj: "98.765.432/0001-10", email: "reserva@lencoistour.com", telefone: "(98) 98888-2222", status: "pendente", passeios_ativos: 0 },
-  { id: 3, razao_social: "São Luís Histórico SA", nome_fantasia: "SLZ Viagens", cnpj: "45.678.123/0001-55", email: "slz@viagens.com", telefone: "(98) 97777-3333", status: "bloqueado", passeios_ativos: 5 }
+  {razao_social: "Aventuras Maranhão LTDA", nome_fantasia: "Aventuras MA", cnpj: "12.345.678/0001-90", email: "contato@aventuras.com", telefone: "(98) 99999-1111", status: "ativo", passeios_ativos: 12 },
+  {razao_social: "Lençóis Turismo EIRELI", nome_fantasia: "Lençóis Tour", cnpj: "98.765.432/0001-10", email: "reserva@lencoistour.com", telefone: "(98) 98888-2222", status: "pendente", passeios_ativos: 0 },
+  {razao_social: "São Luís Histórico SA", nome_fantasia: "SLZ Viagens", cnpj: "45.678.123/0001-55", email: "slz@viagens.com", telefone: "(98) 97777-3333", status: "bloqueado", passeios_ativos: 5 }
 ];
 
 let filteredAgencias = [...allAgencias];
@@ -14,7 +14,6 @@ function updateMetrics() {
   document.getElementById("metricAtivas").textContent = filteredAgencias.filter(a => a.status === 'ativo').length;
 }
 
-// Renderiza a lista sanfona
 // Renderiza a lista sanfona
 function renderAgencias(data) {
   const listContainer = document.getElementById("agenciasList");
@@ -28,38 +27,43 @@ function renderAgencias(data) {
   }
   emptyState.classList.add("hidden");
 
-  data.forEach(ag => {
+  // Usamos um contador (index) apenas para os elementos HTML não se perderem
+  data.forEach((ag, index) => {
     const item = document.createElement("div");
     item.className = "list-item";
-    item.id = `agencia-${ag.id}`;
+    item.id = `agencia-${index}`;
 
-    // PADRONIZAÇÃO DOS BOTÕES (Usando Material Symbols)
+    // PADRONIZAÇÃO DOS BOTÕES
     let botoesAcao = '';
     if(ag.status === 'pendente') {
       botoesAcao = `
-        <button class="btn-action btn-unblock" onclick="alterarStatus(${ag.id}, 'ativo')" title="Aprovar">
+        <button class="btn-action btn-unblock" onclick="alterarStatus('${ag.cnpj}', 'ativo')" title="Aprovar">
           <span class="material-symbols-outlined">check_circle</span> Aprovar Agência
         </button>
-        <button class="btn-action btn-block" onclick="alterarStatus(${ag.id}, 'rejeitado')" title="Rejeitar">
+        <button class="btn-action btn-block" onclick="alterarStatus('${ag.cnpj}', 'rejeitado')" title="Rejeitar">
           <span class="material-symbols-outlined">cancel</span> Rejeitar
         </button>
       `;
     } else {
       botoesAcao = `
-        <button class="btn-action btn-edit" onclick="alert('Editando ${ag.id}')">
+        <button class="btn-action btn-edit" onclick="alert('Editando agência: ${ag.nome_fantasia}')">
           <span class="material-symbols-outlined">edit</span> Editar Cadastro
         </button>
-        <button class="btn-action btn-block" onclick="alterarStatus(${ag.id}, 'bloqueado')">
+        <button class="btn-action btn-block" onclick="alterarStatus('${ag.cnpj}', 'bloqueado')">
           <span class="material-symbols-outlined">block</span> Bloquear Acesso
         </button>
       `;
     }
 
     item.innerHTML = `
-      <div class="list-item-header" onclick="toggleAgencia(${ag.id})">
-        <strong>#${ag.id}</strong>
+      <div class="list-item-header" onclick="toggleAgencia(${index})">
+        
+        <div style="display: flex; align-items: center; justify-content: center; width: 50px;">
+          <span class="material-symbols-outlined" style="color: #94a3b8; font-size: 28px;">domain</span>
+        </div>
+        
         <div>
-          <h4>${ag.nome_fantasia}</h4>
+          <h4 style="margin: 0;">${ag.nome_fantasia}</h4>
           <small>CNPJ: ${ag.cnpj}</small>
         </div>
         <div>
@@ -67,7 +71,7 @@ function renderAgencias(data) {
           <small>${ag.telefone}</small>
         </div>
         <div>
-           <span class="status-badge ${ag.status}">${ag.status}</span>
+           <span class="status-badge ${ag.status}">${ag.status.toUpperCase()}</span>
         </div>
         <span class="material-symbols-outlined arrow-icon">expand_more</span>
       </div>
@@ -95,8 +99,8 @@ function renderAgencias(data) {
   });
 }
 
-function toggleAgencia(id) {
-  const el = document.getElementById(`agencia-${id}`);
+function toggleAgencia(index) {
+  const el = document.getElementById(`agencia-${index}`);
   const isOpen = el.classList.contains('active');
   
   document.querySelectorAll('.list-item').forEach(item => {
@@ -111,15 +115,13 @@ function toggleAgencia(id) {
   }
 }
 
-// Simulador de ação de aprovação
-function alterarStatus(id, novoStatus) {
-  if(confirm(`Deseja alterar o status da agência #${id} para ${novoStatus.toUpperCase()}?`)) {
-    const agencia = allAgencias.find(a => a.id === id);
-    if(agencia) {
+// Simulador de ação agora busca pelo CNPJ
+function alterarStatus(cnpj, novoStatus) {
+  const agencia = allAgencias.find(a => a.cnpj === cnpj);
+  if(agencia && confirm(`Deseja alterar o status da agência ${agencia.nome_fantasia} para ${novoStatus.toUpperCase()}?`)) {
       agencia.status = novoStatus;
-      applyFilters(); // Recarrega a tela com o novo status
+      applyFilters(); 
       alert("Status atualizado com sucesso!");
-    }
   }
 }
 
@@ -139,7 +141,7 @@ function applyFilters() {
   updateMetrics();
 }
 
-// Eventos
+// Eventos e Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("btnSearch")?.addEventListener("click", applyFilters);
   document.getElementById("searchAgencia")?.addEventListener("keypress", (e) => {
@@ -147,31 +149,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById("filterStatus")?.addEventListener("change", applyFilters);
   document.getElementById("clearFiltersBtn")?.addEventListener("click", () => {
-    document.getElementById("searchAgencia").value = "";
-    document.getElementById("filterStatus").value = "";
+    const searchInput = document.getElementById("searchAgencia");
+    const statusSelect = document.getElementById("filterStatus");
+    if(searchInput) searchInput.value = "";
+    if(statusSelect) statusSelect.value = "";
     applyFilters();
   });
 
   // Carrega a tela pela primeira vez
   renderAgencias(allAgencias);
   updateMetrics();
+
+  // Puxa os dados do usuário salvos no login
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  if (usuario && usuario.email) {
+    const adminEmail = document.getElementById('adminEmail');
+    if(adminEmail) adminEmail.textContent = usuario.email;
+  }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-      // Puxa os dados do usuário salvos no login
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
-      
-      // Se tiver usuário logado, troca o texto do e-mail na sidebar
-      if (usuario && usuario.email) {
-        document.getElementById('adminEmail').textContent = usuario.email;
-      }
-    });
-
-    // Faz o botão de Sair funcionar
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('usuario');
-        window.location.href = '../../index.html'; // Redireciona para fora
-      });
-    }
+// Faz o botão de Sair funcionar
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('usuario');
+    window.location.href = '../../index.html'; // Redireciona para fora
+  });
+}

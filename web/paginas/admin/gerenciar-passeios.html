@@ -95,6 +95,26 @@
       </header>
 
       <main class="content">
+        <section class="metrics-row metrics-grid" style="margin-top: 0;">
+          <div class="info-card" style="border-left: 4px solid #11c5b6;">
+            <h3>Total de passeios</h3>
+            <p class="card-number" id="metricTotal">0</p>
+            <span>ativos no site</span>
+          </div>
+
+          <div class="info-card" style="border-left: 4px solid #023847;">
+            <h3>Preço Médio</h3>
+            <p class="card-number" id="metricPrecoMedio">R$ 0,00</p>
+            <span>no Maranhão</span>
+          </div>
+
+          <div class="info-card" style="border-left: 4px solid #023847;">
+            <h3>Aprovações</h3>
+            <p class="card-number" id="metricPendentes">0</p>
+            <span>novos hoje</span>
+          </div>
+        </section>
+
         <section class="panel">
           <div class="page-actions">
             <div class="filters">
@@ -124,30 +144,12 @@
 
             <div class="action-buttons">
               <button class="secondary-btn" id="clearFiltersBtn">Limpar</button>
-              <button class="primary-btn" onclick="window.location.href='cadastros.html'">+ Novo Produto</button>
+              <button class="primary-btn" onclick="window.location.href='cadastrar-produto.html'">+ Novo Produto</button>
             </div>
           </div>
         </section>
 
-        <section class="metrics-row metrics-grid">
-          <div class="info-card">
-            <h3>Total de passeios</h3>
-            <p class="card-number" id="metricTotal">0</p>
-            <span>ativos no site</span>
-          </div>
 
-          <div class="info-card">
-            <h3>Preço Médio</h3>
-            <p class="card-number" id="metricPrecoMedio">R$ 0,00</p>
-            <span>no Maranhão</span>
-          </div>
-
-          <div class="info-card">
-            <h3>Aprovações</h3>
-            <p class="card-number" id="metricPendentes">0</p>
-            <span>novos hoje</span>
-          </div>
-        </section>
 
         <div id="messageBox" class="message-box hidden"></div>
 
