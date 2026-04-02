@@ -1,21 +1,24 @@
 .sidebar {
   width: var(--sidebar-width);
-  min-height: calc(100vh - var(--brandbar-height));
+  height: calc(100vh - var(--brandbar-height));
   background: var(--color-sidebar);
   color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 22px 18px;
   position: sticky;
   top: var(--brandbar-height);
+  align-self: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Espaço superior da sidebar sem a marca */
+/* topo da sidebar */
 .sidebar-top {
   margin-bottom: 12px;
   display: flex;
   justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .sidebar-close {
@@ -28,11 +31,13 @@
   cursor: pointer;
 }
 
+/* navegação ocupa o espaço central */
 .sidebar-menu {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .menu-item {
@@ -63,10 +68,13 @@
   font-size: 1rem;
 }
 
+/* rodapé sempre fica no final da barra lateral */
 .sidebar-footer {
-  margin-top: 28px;
+  margin-top: auto;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding-top: 18px;
+  flex-shrink: 0;
+  background: transparent;
 }
 
 .partner-info {
@@ -108,8 +116,9 @@
     top: var(--brandbar-height);
     z-index: 999;
     width: 280px;
-    min-height: calc(100vh - var(--brandbar-height));
+    height: calc(100vh - var(--brandbar-height));
     transition: left 0.25s ease;
+    align-self: auto;
   }
 
   .sidebar.open {
