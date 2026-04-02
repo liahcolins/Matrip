@@ -58,10 +58,24 @@ if (redirect) {
   }
 
   // TEMPORÁRIO: guia acessa painel parceiro
-  if (tipo === "guia") {
+  if (tipo === "parceiro") {
     window.location.href = "/paginas/parceiro/index.html";
     return;
   }
+
+
+
+
+  if (tipo === "guia") {
+  window.location.href = "/paginas/guia/index.html";
+  return;
+}
+
+
+
+
+
+
 
   // usuário comum (turista)
   window.location.href = "/index.html";
