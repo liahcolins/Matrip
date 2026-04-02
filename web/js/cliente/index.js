@@ -212,7 +212,6 @@ function renderizarPreviewReservas() {
 }
 
 function configurarEventosBasicos() {}
-
 // Inicializa a home do cliente.
 function inicializarDashboardCliente() {
   renderizarUsuario();

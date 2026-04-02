@@ -30,12 +30,12 @@ body {
   color: var(--color-text);
 }
 
-/* Estrutura geral do dashboard */
+/* estrutura geral do dashboard */
 .dashboard-shell {
   min-height: 100vh;
 }
 
-/* Barra superior de marca */
+/* barra superior de marca */
 .partner-brandbar {
   position: sticky;
   top: 0;
@@ -109,20 +109,22 @@ body {
   background: rgba(255, 255, 255, 0.18);
 }
 
-/* Corpo do dashboard abaixo da brandbar */
+/* corpo do dashboard abaixo da brandbar */
 .dashboard-container {
   min-height: calc(100vh - var(--brandbar-height));
   display: flex;
+  align-items: flex-start;
 }
 
 .dashboard-main {
   flex: 1;
   min-width: 0;
+  min-height: calc(100vh - var(--brandbar-height));
   display: flex;
   flex-direction: column;
 }
 
-/* Topbar interna do conteúdo */
+/* topbar interna do conteúdo */
 .topbar {
   display: flex;
   align-items: center;
@@ -283,6 +285,14 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .dashboard-container {
+    min-height: auto;
+  }
+
+  .dashboard-main {
+    min-height: auto;
   }
 
   .content {
