@@ -20,8 +20,8 @@
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 10px;
-  --sidebar-width: 280px;
-  --brandbar-height: 84px;
+  --sidebar-width: 260px;
+  --brandbar-height: 100px;
 }
 
 body {
@@ -117,11 +117,10 @@ body {
 }
 
 .dashboard-main {
-  flex: 1;
-  min-width: 0;
-  min-height: calc(100vh - var(--brandbar-height));
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    margin-left: var(--sidebar-width) !important; /* Força o recuo de 260px igual ao admin */
+    width: calc(100% - var(--sidebar-width)) !important;
 }
 
 /* topbar interna do conteúdo */
@@ -299,13 +298,26 @@ body {
     padding: 18px;
   }
 
-  .topbar {
-    padding: 18px;
-  }
+/* Garante que a logo do parceiro tenha o tamanho correto na barra de 100px */
+.partner-brandbar__logo {
+    height: 80px !important; /* Igual ao admin */
+    width: auto;
+}
 
-  .topbar-title h1 {
-    font-size: 24px;
-  }
+/* Padronização da barra branca de títulos (copiado do admin) */
+.topbar {
+    display: flex;
+    align-items: center;
+    min-height: 90px !important; 
+    padding: 15px 30px !important;
+    box-sizing: border-box;
+}
+
+.topbar-title h1 {
+    margin: 0 0 5px 0 !important;
+    font-size: 26px !important;
+    line-height: 1.2;
+}
 
   .cards-grid {
     grid-template-columns: 1fr;

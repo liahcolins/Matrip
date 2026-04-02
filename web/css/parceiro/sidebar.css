@@ -1,16 +1,17 @@
 .sidebar {
-  width: var(--sidebar-width);
-  height: calc(100vh - var(--brandbar-height));
+  width: var(--sidebar-width) !important;
+  height: calc(100vh - var(--brandbar-height)) !important;
   background: var(--color-sidebar);
   color: #fff;
   display: flex;
   flex-direction: column;
   padding: 22px 18px;
-  position: sticky;
-  top: var(--brandbar-height);
+  position: fixed !important;
+  top: var(--brandbar-height) !important;
   align-self: flex-start;
   overflow-y: auto;
   overflow-x: hidden;
+  left: 0 !important;
 }
 
 /* topo da sidebar */
