@@ -406,3 +406,30 @@
     color: #64748b;
     font-size: 14px;
 }
+
+/* ==========================================================================
+   CORREÇÃO DA SIDEBAR (Sobrescrevendo o CSS do Parceiro após o merge)
+   ========================================================================== */
+aside.sidebar {
+    display: flex !important; /* Força o flexbox que o parceiro tirou */
+    flex-direction: column !important; /* Coloca os itens em coluna */
+}
+
+/* O menu que tem os botões (Home, Usuários, etc) */
+aside.sidebar .sidebar-menu {
+    flex: 1 !important; /* Ocupa o espaço livre, mas permite que o scroll funcione */
+    height: 0 !important; /* Truque ninja do Flexbox para forçar a barra de rolagem a aparecer no lugar certo */
+    overflow-y: auto !important; /* Garante a rolagem */
+    margin-bottom: 0 !important; /* Tira a margem que estava cortando o texto */
+    padding-bottom: 20px !important; /* Dá o respiro por DENTRO do menu, logo abaixo de Configurações */
+}
+
+/* O rodapé com "Admin logado" e botão Sair */
+/* O rodapé com "Admin logado" e botão Sair */
+aside.sidebar .sidebar-footer {
+    position: static !important; 
+    margin-top: auto !important; 
+    height: auto !important; 
+    /* Reduzimos o padding embaixo para colar mais no final da tela */
+    padding: 20px 20px 10px 20px !important; 
+}
