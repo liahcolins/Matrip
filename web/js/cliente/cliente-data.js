@@ -369,3 +369,33 @@ function contarParticipantes(reserva) {
 function obterImagemPasseio(reserva) {
   return reserva?.passeio?.imagem || "";
 }
+
+
+/* controle de sessão e logout da área do cliente
+   centralizado aqui para ser reutilizado em todas as páginas */
+function configurarLogout() {
+  const btnLogout = document.getElementById("btnLogout");
+
+  if (!btnLogout) return;
+
+  btnLogout.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    try {
+      // remove todos os dados de sessão conhecidos
+      localStorage.removeItem("usuarioLogado");
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("tipo");
+      localStorage.removeItem("redirectAfterLogin");
+
+      // opcional: limpa tudo (use se quiser reset total)
+      // localStorage.clear();
+
+    } catch (erro) {
+      console.error("Erro ao limpar sessão:", erro);
+    }
+
+    // redireciona para a home principal do site
+    window.location.href = "../../index.html";
+  });
+}

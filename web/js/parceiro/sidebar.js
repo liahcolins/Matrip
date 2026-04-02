@@ -1,60 +1,66 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const menuToggle = document.getElementById("menuToggle");
   const sidebar = document.getElementById("sidebar");
   const sidebarClose = document.getElementById("sidebarClose");
 
-  console.log("sidebar.js carregado");
-
-  // abrir sidebar
-  if (menuToggle && sidebar) {
-    menuToggle.addEventListener("click", () => {
+  function abrirSidebar() {
+    if (sidebar) {
       sidebar.classList.add("open");
-    });
+    }
   }
 
-  // fechar sidebar pelo botão X
-  if (sidebarClose && sidebar) {
-    sidebarClose.addEventListener("click", () => {
-      sidebar.classList.remove("open");
-    });
-  }
-
-  // fechar sidebar clicando fora (mobile)
-  document.addEventListener("click", (event) => {
-
-    const isMobile = window.innerWidth <= 768;
-
-    if (!isMobile || !sidebar) return;
-
-    const clickedInsideSidebar = sidebar.contains(event.target);
-    const clickedMenuButton = menuToggle && menuToggle.contains(event.target);
-
-    if (!clickedInsideSidebar && !clickedMenuButton) {
+  function fecharSidebar() {
+    if (sidebar) {
       sidebar.classList.remove("open");
     }
+  }
 
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      abrirSidebar();
+    });
+  }
+
+  if (sidebarClose && sidebar) {
+    sidebarClose.addEventListener("click", () => {
+      fecharSidebar();
+    });
+  }
+
+  // fecha a sidebar ao clicar fora, apenas no mobile
+  document.addEventListener("click", (event) => {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile || !sidebar) return;
+
+    const clicouDentroDaSidebar = sidebar.contains(event.target);
+    const clicouNoBotaoMenu = menuToggle && menuToggle.contains(event.target);
+
+    if (!clicouDentroDaSidebar && !clicouNoBotaoMenu) {
+      fecharSidebar();
+    }
   });
 
-  // BOTÃO SAIR
-  document.addEventListener("click", function (e) {
+  // fecha a sidebar ao trocar para desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      fecharSidebar();
+    }
+  });
 
-    const btnSair = e.target.closest(".logout-btn");
-
+  // logout centralizado para qualquer botão com classe .logout-btn
+  document.addEventListener("click", (event) => {
+    const btnSair = event.target.closest(".logout-btn");
     if (!btnSair) return;
 
-    e.preventDefault();
+    event.preventDefault();
 
-    console.log("Logout acionado");
-
-    // limpar sessão
     localStorage.removeItem("usuario");
     localStorage.removeItem("tipo");
+    localStorage.removeItem("usuarioLogado");
     localStorage.removeItem("redirectAfterLogin");
 
-    // redirecionar
-    window.location.href = "http://localhost:3000/";
-
+    // volta para a home pública do projeto
+    window.location.href = "../../index.html";
   });
-
 });
