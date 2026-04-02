@@ -1,6 +1,6 @@
 .sidebar {
   width: var(--sidebar-width);
-  min-height: 100vh;
+  min-height: calc(100vh - var(--brandbar-height));
   background: var(--color-sidebar);
   color: #fff;
   display: flex;
@@ -8,41 +8,19 @@
   justify-content: space-between;
   padding: 22px 18px;
   position: sticky;
-  top: 0;
+  top: var(--brandbar-height);
 }
 
+/* Espaço superior da sidebar sem a marca */
 .sidebar-top {
-  margin-bottom: 24px;
-}
-
-.brand {
+  margin-bottom: 12px;
   display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.brand-logo {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 6px;
-}
-
-.brand-text h2 {
-  font-size: 22px;
-  margin-bottom: 2px;
-}
-
-.brand-text p {
-  font-size: 14px;
-  color: #cde7eb;
+  justify-content: flex-end;
 }
 
 .sidebar-close {
   display: none;
-  margin-top: 14px;
+  margin-top: 0;
   border: none;
   background: transparent;
   color: #fff;
@@ -60,9 +38,9 @@
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 14px 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   color: #e9f7fa;
   text-decoration: none;
   font-weight: 600;
@@ -76,6 +54,13 @@
 .menu-item.active {
   background: var(--color-primary);
   color: #fff;
+}
+
+.menu-icon {
+  width: 18px;
+  min-width: 18px;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .sidebar-footer {
@@ -120,9 +105,10 @@
   .sidebar {
     position: fixed;
     left: -100%;
-    top: 0;
+    top: var(--brandbar-height);
     z-index: 999;
     width: 280px;
+    min-height: calc(100vh - var(--brandbar-height));
     transition: left 0.25s ease;
   }
 
