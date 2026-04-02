@@ -6,11 +6,11 @@ function carregarComponente(seletor, caminho) {
   if (!elemento) return Promise.resolve();
 
   return fetch(caminho)
-    .then(res => {
+    .then((res) => {
       if (!res.ok) throw new Error(`Erro ao carregar ${caminho}`);
       return res.text();
     })
-    .then(html => {
+    .then(async (html) => {
       elemento.innerHTML = html;
 
       if (seletor === "#carrossel-container") {
@@ -24,10 +24,16 @@ function carregarComponente(seletor, caminho) {
       }
 
       if (seletor === "#flashcards-container") {
+        // depois que o HTML parcial dos flashcards entra na página,
+        // chama a função que busca os passeios e monta os cards
+        if (typeof carregarFlashcards === "function") {
+          await carregarFlashcards();
+        }
+
         ativarScrollReveal();
       }
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 // ==============================
@@ -73,8 +79,8 @@ function ativarScrollReveal() {
   const cards = document.querySelectorAll(".card");
   if (!cards.length) return;
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("visible");
         observer.unobserve(entry.target);
@@ -82,7 +88,7 @@ function ativarScrollReveal() {
     });
   }, { threshold: 0.2 });
 
-  cards.forEach(card => observer.observe(card));
+  cards.forEach((card) => observer.observe(card));
 }
 
 // ==============================
@@ -108,8 +114,8 @@ function ativarRevealParceiros() {
   const elementos = document.querySelectorAll(".reveal");
   if (!elementos.length) return;
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("visible");
         observer.unobserve(entry.target);
@@ -117,7 +123,7 @@ function ativarRevealParceiros() {
     });
   }, { threshold: 0.2 });
 
-  elementos.forEach(el => observer.observe(el));
+  elementos.forEach((el) => observer.observe(el));
 }
 
 // ==============================
@@ -130,6 +136,7 @@ function pausarCarrosselParceiros() {
   carousel.addEventListener("mouseenter", () => {
     carousel.style.animationPlayState = "paused";
   });
+
   carousel.addEventListener("mouseleave", () => {
     carousel.style.animationPlayState = "running";
   });
@@ -139,7 +146,7 @@ function pausarCarrosselParceiros() {
 // 🎴 BOTÕES "VER MAIS / VER MENOS / VER TUDO"
 // ==============================
 function configurarBotoesVerMais() {
-  document.body.addEventListener("click", e => {
+  document.body.addEventListener("click", (e) => {
     const btn = e.target;
 
     if (btn.classList.contains("btn-vermais")) {
@@ -169,6 +176,7 @@ function configurarBotoesVerMais() {
         extras.querySelectorAll(".card").forEach((card, i) => {
           card.style.opacity = "0";
           card.style.transform = "translateY(20px)";
+
           setTimeout(() => {
             card.style.transition = "opacity .4s ease, transform .4s ease";
             card.style.opacity = "1";
@@ -190,12 +198,13 @@ function configurarBotoesVerMais() {
     }
 
     if (btn.classList.contains("btn-vertudo")) {
-      document.querySelectorAll(".categoria .extras").forEach(ex => {
+      document.querySelectorAll(".categoria .extras").forEach((ex) => {
         ex.classList.add("show");
 
         ex.querySelectorAll(".card").forEach((card, i) => {
           card.style.opacity = "0";
           card.style.transform = "translateY(20px)";
+
           setTimeout(() => {
             card.style.transition = "opacity .4s ease, transform .4s ease";
             card.style.opacity = "1";
@@ -204,8 +213,10 @@ function configurarBotoesVerMais() {
         });
       });
 
-      document.querySelectorAll(".btn-actions").forEach(a => a.remove());
-      document.querySelectorAll(".btn-vermais").forEach(b => b.style.display = "none");
+      document.querySelectorAll(".btn-actions").forEach((a) => a.remove());
+      document.querySelectorAll(".btn-vermais").forEach((b) => {
+        b.style.display = "none";
+      });
     }
   });
 }
@@ -229,6 +240,7 @@ function atualizarEstadoNavbar() {
 
 document.addEventListener("click", function (e) {
   const logoutBtn = e.target.closest("#logoutBtn, .logout-btn");
+
   if (logoutBtn) {
     e.preventDefault();
     localStorage.removeItem("usuario");
@@ -265,7 +277,7 @@ document.addEventListener("click", function (e) {
   if (tipo === "usuario") {
     window.location.href = "/paginas/cliente/index.html";
     return;
-}
+  }
 
   window.location.href = "/paginas/login1.html";
 });
