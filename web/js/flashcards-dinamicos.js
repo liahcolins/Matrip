@@ -1,14 +1,20 @@
-document.addEventListener('DOMContentLoaded', carregarFlashcards);
-
 async function carregarFlashcards() {
   try {
-    const res = await fetch('http://localhost:3000/home/passeios');
+    const res = await fetch("/home/passeios");
+
+    if (!res.ok) {
+      throw new Error(`Falha ao buscar passeios: ${res.status}`);
+    }
+
     const passeios = await res.json();
 
-    const container = document.getElementById('flashcards-container');
-    if (!container) return;
+    const containerPrincipal = document.getElementById("flashcards-container");
+    if (!containerPrincipal) return;
 
-    container.innerHTML = '';
+    // após a injeção do componente, os cards entram em #homeCategorias;
+    // se por algum motivo esse elemento não existir, usa o contêiner principal
+    const container = document.getElementById("homeCategorias") || containerPrincipal;
+    container.innerHTML = "";
 
     if (!Array.isArray(passeios) || passeios.length === 0) {
       container.innerHTML = `
@@ -19,84 +25,101 @@ async function carregarFlashcards() {
       return;
     }
 
-    // ========= Agrupar por categoria =========
     const categorias = {};
-    passeios.forEach(p => {
-      const cat = (p.categoria || 'Outros').toLowerCase();
-      if (!categorias[cat]) categorias[cat] = [];
-      categorias[cat].push(p);
+
+    passeios.forEach((passeio) => {
+      const categoria = (passeio.categoria || "Outros").trim();
+
+      if (!categorias[categoria]) {
+        categorias[categoria] = [];
+      }
+
+      categorias[categoria].push(passeio);
     });
 
-    // ========= Gerar blocos por categoria =========
-    Object.keys(categorias).forEach((cat) => {
-      const lista = categorias[cat];
-
-      // Separa: 3 primeiros visíveis, resto vai para "extras"
+    Object.keys(categorias).forEach((categoria) => {
+      const lista = categorias[categoria];
       const principais = lista.slice(0, 3);
       const extras = lista.slice(3);
 
-      const section = document.createElement('div');
-      section.className = 'categoria mb-5 text-center';
+      const section = document.createElement("section");
+      section.className = "categoria mb-5";
 
       section.innerHTML = `
-        <h3>${capitalizar(cat)}</h3>
+        <h3>${capitalizar(categoria)}</h3>
 
         <div class="cards-row"></div>
 
-        ${extras.length > 0 ? `<div class="cards-row extras" style="display:none;"></div>` : ''}
+        ${extras.length > 0 ? `<div class="cards-row extras"></div>` : ""}
 
-        ${extras.length > 0 ? `<button class="btn-vermais" type="button">Ver mais</button>` : ''}
+        ${extras.length > 0 ? `<button class="btn-vermais" type="button">Ver mais</button>` : ""}
       `;
 
-      const rowPrincipais = section.querySelector('.cards-row');
-      principais.forEach(p => rowPrincipais.appendChild(criarCard(p)));
+      const rowPrincipais = section.querySelector(".cards-row");
+      principais.forEach((passeio) => {
+        rowPrincipais.appendChild(criarCard(passeio));
+      });
 
       if (extras.length > 0) {
-        const rowExtras = section.querySelector('.cards-row.extras');
-        extras.forEach(p => rowExtras.appendChild(criarCard(p)));
+        const rowExtras = section.querySelector(".cards-row.extras");
+        extras.forEach((passeio) => {
+          rowExtras.appendChild(criarCard(passeio));
+        });
 
-        const btnVerMais = section.querySelector('.btn-vermais');
-        btnVerMais.addEventListener('click', () => {
-          const aberto = rowExtras.style.display !== 'none';
-          rowExtras.style.display = aberto ? 'none' : 'flex';
-          btnVerMais.textContent = aberto ? 'Ver mais' : 'Ver menos';
+        const btnVerMais = section.querySelector(".btn-vermais");
+
+        btnVerMais.addEventListener("click", () => {
+          rowExtras.classList.toggle("show");
+          btnVerMais.textContent = rowExtras.classList.contains("show")
+            ? "Ver menos"
+            : "Ver mais";
         });
       }
 
       container.appendChild(section);
     });
+  } catch (erro) {
+    console.error("Erro ao carregar flashcards:", erro);
 
-  } catch (err) {
-    console.error('Erro ao carregar flashcards:', err);
+    const container =
+      document.getElementById("homeCategorias") ||
+      document.getElementById("flashcards-container");
+
+    if (container) {
+      container.innerHTML = `
+        <p class="text-center text-muted">
+          Não foi possível carregar os passeios agora.
+        </p>
+      `;
+    }
   }
 }
 
-function criarCard(p) {
-  const card = document.createElement('div');
-  card.className = 'card';
+function criarCard(passeio) {
+  const card = document.createElement("div");
+  card.className = "card";
 
-  const img = p.imagem
-    ? `http://localhost:3000/uploads/${p.imagem}`
-    : 'http://localhost:3000/uploads/default.jpg';
+  const imagem = passeio.imagem
+    ? `/uploads/${passeio.imagem}`
+    : `/uploads/default.jpg`;
 
-  // Monta os preços somente se existirem
-  const adulto = p.valor_adulto ? `
-    <li><i class="fa-solid fa-user"></i> Adultos: <strong>R$ ${formatar(p.valor_adulto)}</strong></li>
-  ` : '';
+  const adulto = passeio.valor_adulto
+    ? `<li><i class="fa-solid fa-user"></i> Adultos: <strong>R$ ${formatar(passeio.valor_adulto)}</strong></li>`
+    : "";
 
-  const estudante = p.valor_estudante ? `
-    <li><i class="fa-solid fa-graduation-cap"></i> Estudantes: <strong>R$ ${formatar(p.valor_estudante)}</strong></li>
-  ` : '';
+  const estudante = passeio.valor_estudante
+    ? `<li><i class="fa-solid fa-graduation-cap"></i> Estudantes: <strong>R$ ${formatar(passeio.valor_estudante)}</strong></li>`
+    : "";
 
-  const crianca = p.valor_crianca ? `
-    <li><i class="fa-solid fa-child"></i> Crianças: <strong>R$ ${formatar(p.valor_crianca)}</strong></li>
-  ` : '';
+  const crianca = passeio.valor_crianca
+    ? `<li><i class="fa-solid fa-child"></i> Crianças: <strong>R$ ${formatar(passeio.valor_crianca)}</strong></li>`
+    : "";
 
   card.innerHTML = `
-    <img src="${img}" alt="${escapeHtml(p.local || 'Passeio')}">
+    <img src="${imagem}" alt="${escapeHtml(passeio.local || "Passeio")}" />
     <div class="card-body">
-      <h5 class="card-title">${escapeHtml(p.local || 'Sem local')}</h5>
-      <p class="card-text">${escapeHtml(p.descricao || '')}</p>
+      <h5 class="card-title">${escapeHtml(passeio.local || "Sem local")}</h5>
+      <p class="card-text">${escapeHtml(passeio.descricao || "")}</p>
 
       <div class="card-prices">
         <ul>
@@ -108,10 +131,10 @@ function criarCard(p) {
         <div class="price-highlight">
           <div class="price-text">
             <span>Por apenas</span>
-            <strong>R$ ${formatar(p.valor_final || 0)}</strong>
+            <strong>R$ ${formatar(passeio.valor_final || 0)}</strong>
           </div>
 
-          <button class="btn-comprar" type="button" data-id="${p.id}">
+          <button class="btn-comprar" type="button" data-id="${passeio.id}">
             Comprar
           </button>
         </div>
@@ -119,10 +142,12 @@ function criarCard(p) {
     </div>
   `;
 
-  // ✅ Clique em comprar -> vai para a tela de detalhes com o id
-  card.querySelector('.btn-comprar')?.addEventListener('click', () => {
-    window.location.href = `/paginas/detalhes.html?id=${p.id}`;
-  });
+  const btnComprar = card.querySelector(".btn-comprar");
+  if (btnComprar) {
+    btnComprar.addEventListener("click", () => {
+      window.location.href = `/paginas/Detalhes.html?id=${passeio.id}`;
+    });
+  }
 
   return card;
 }
@@ -132,15 +157,14 @@ function capitalizar(texto) {
 }
 
 function formatar(valor) {
-  return Number(valor).toFixed(2).replace('.', ',');
+  return Number(valor).toFixed(2).replace(".", ",");
 }
 
-// evita quebrar HTML se vier caracteres especiais
 function escapeHtml(str) {
   return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
