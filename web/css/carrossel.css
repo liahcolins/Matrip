@@ -29,11 +29,12 @@
 .carousel-item img,
 .carousel-inner img {
   width: 100%;
-  height: 520px; /* altura padrão desktop */
+  height: 27vh !important; /* <--- O banner agora ocupa 60% da altura da tela */
+  min-height: 380px; /* Impede que fique muito pequeno em telas baixas */
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform 3s ease; /* zoom suave opcional */
+  transition: transform 3s ease;
 }
 
 .carousel-item.active img {
@@ -44,7 +45,7 @@
 .carousel-caption {
   position: absolute !important;
   left: 50% !important;
-  bottom: 14% !important;
+  bottom: 8% !important;
   transform: translateX(-50%) translateY(20px);
   opacity: 0;
   max-width: 560px;
