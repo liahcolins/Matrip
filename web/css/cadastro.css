@@ -30,7 +30,7 @@ body{
   min-height:100dvh;
   display:grid;
   place-items:center;
-  padding: clamp(24px, 4vw, 48px);
+  padding: clamp(16px, 2vw, 24px); /* PADRONIZADO COM LOGIN */
   position:relative;
   overflow:hidden;
 }
@@ -59,42 +59,67 @@ body{
   background: #ffffff;
   border: 1px solid #dddddd;
   backdrop-filter: blur(8px);
-  padding: clamp(22px, 3.2vw, 40px);
+  padding: clamp(16px, 2.5vw, 28px); /* PADRONIZADO COM LOGIN */
   border-radius: var(--radius-xl);
   box-shadow: 0 10px 35px rgba(0,0,0,.08);
   position:relative;
-
   display:grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 12px; /* PADRONIZADO COM LOGIN */
   text-align:center;
+  
+  /* Efeitos de hover (mantidos do seu original de cadastro) */
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.4s ease;
 }
 
-/* Logo */
-.brand{
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  margin:0 auto 6px;
-  text-decoration:none;
-  color:var(--ink);
+/* ====== Logo com Efeito Circular (Importado do Login) ====== */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: -10px auto 0px auto; 
+  text-decoration: none;
+  color: var(--ink);
+  position: relative;
 }
-.brand img{
-  width:170px; height:170px; object-fit:contain;
-  border-radius:12px;
-  padding:6px;
+
+/* O círculo fantasma e sombreamento */
+.brand::before {
+  content: "";
+  position: absolute;
+  width: 125px; 
+  height: 125px; 
+  margin-left: 8px; 
+  background: radial-gradient(circle, rgba(0, 191, 166, 0.08) 0%, transparent 80%);
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(0, 191, 166, 0.18); 
+  z-index: -1; 
+  transition: transform 0.3s ease;
+}
+
+.brand:hover::before {
+  transform: scale(1.1); 
+}
+
+.brand img {
+  width: 170px; 
+  height: auto; 
+  max-height: 140px; 
+  object-fit: contain;
 }
 
 /* Títulos */
 .login-title{
-  margin:4px 0 0;
   font-size: clamp(22px, 2.6vw, 28px);
   font-weight:800;
+  margin: -5px 0 0; /* PADRONIZADO COM LOGIN */
 }
 .login-subtitle{
-  margin:0 0 8px;
   color:var(--muted);
   font-weight:600;
+  margin:0 0 8px; /* PADRONIZADO COM LOGIN */
 }
 
 /* ===== Form ===== */
@@ -102,13 +127,13 @@ form{ margin-top:4px; }
 
 .form-group{
   text-align:left;
-  margin-bottom:14px;
+  margin-bottom:8px; /* PADRONIZADO COM LOGIN */
 }
 label{
   display:block;
   font-weight:700;
-  font-size:14px;
-  margin-bottom:8px;
+  font-size:13px; /* PADRONIZADO COM LOGIN */
+  margin-bottom:4px; /* PADRONIZADO COM LOGIN */
 }
 
 /* Inputs uniformes */
@@ -121,8 +146,8 @@ input[type="tel"]{
   color: var(--ink);
   border: 1px solid #cccccc;
   border-radius: var(--radius);
-  padding: 12px 14px;
-  font-size:15px;
+  padding: 10px 12px; /* PADRONIZADO COM LOGIN */
+  font-size:14px; /* PADRONIZADO COM LOGIN */
   outline:none;
   transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
 }
@@ -132,6 +157,13 @@ input:focus{
   border-color: var(--brand, #0ae2c2);
   box-shadow: 0 0 0 3px rgba(10,226,194,.18);
   background: rgba(0,0,0,.28);
+}
+
+/* Remover estilo padrão do navegador para input tel */
+input[type="tel"] {
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 /* Campo de senha com botão olho */
@@ -152,7 +184,7 @@ input:focus{
 
 /* Checkbox termos */
 .form-row{
-  margin: 12px 0 6px;
+  margin: 8px 0 6px; /* PADRONIZADO COM LOGIN */
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -172,9 +204,9 @@ input:focus{
   width:100%;
   border:0;
   border-radius: 18px;
-  padding: 12px 18px;
+  padding: 10px 18px; /* PADRONIZADO COM LOGIN */
   font-weight:800;
-  text-transform:uppercase;
+  text-transform:none; /* Mudado para none para não ficar gritando "CADASTRAR" */
   letter-spacing:.4px;
   background: linear-gradient(135deg, var(--brand-2), #ffd95a);
   color:#121212;
@@ -190,19 +222,19 @@ input:focus{
 
 /* Link login */
 .signup-hint{
-  margin: 14px 0 0;
+  margin: 10px 0 0; /* PADRONIZADO COM LOGIN */
   color: var(--muted);
   font-weight:600;
   text-align:center;
 }
 .link{
-  color: var(--brand); /*mudei pra verde claro o li e concordo*/
+  color: var(--brand); 
   text-decoration:none;
   font-weight:700;
 }
 .link:hover{ text-decoration:underline; }
 
-/* Validação */
+/* ====== Validação ====== */
 .was-validated input:invalid{
   border-color:#ff8585;
   box-shadow: 0 0 0 3px rgba(255,133,133,.18);
@@ -210,30 +242,6 @@ input:focus{
 .was-validated input:valid{
   border-color:#59d3c4;
   box-shadow: 0 0 0 3px rgba(89,211,196,.18);
-}
-
-/* Responsivo */
-@media (min-width: 780px){
-  .login-card{ max-width: 560px; }
-}
-@media (max-width: 420px){
-  .form-row{ flex-direction:column; align-items:flex-start; gap:10px; }
-}
-
-
-input[type="tel"] {
-  appearance: none;       /* remove estilo padrão do navegador */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background: #f9f9f9;
-  color: var(--ink);
-  border:1px solid #cccccc;
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  font-size:15px;
-  outline:none;
-  transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
 }
 
 /* ====== Estilos de erro ====== */
@@ -262,14 +270,8 @@ input:valid {
   border-color: #00bfa6 !important;
   box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.2) !important;
 }
-/* ====== Efeito hover no card de cadastro ====== */
-.login-card {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.4s ease;
-}
 
-/* 🔹 Efeito de elevação e brilho */
+/* ====== Efeitos Adicionais de Hover do Cadastro ====== */
 .login-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 45px rgba(0, 191, 166, 0.25), 0 0 35px rgba(244, 194, 13, 0.15);
@@ -277,7 +279,7 @@ input:valid {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* 🔹 Reflexo translúcido sutil ao passar o mouse */
+/* Reflexo translúcido sutil ao passar o mouse */
 .login-card::after {
   content: "";
   position: absolute;
@@ -297,3 +299,10 @@ input:valid {
   transform: scale(1);
 }
 
+/* Responsivo */
+@media (min-width: 780px){
+  .login-card{ max-width: 560px; }
+}
+@media (max-width: 420px){
+  .form-row{ flex-direction:column; align-items:flex-start; gap:10px; }
+}

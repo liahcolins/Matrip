@@ -29,8 +29,7 @@
       <nav class="sidebar-menu">
         <a href="index.html" class="menu-item"><span class="material-symbols-outlined">home</span><span>Home</span></a>
         <a href="gerenciar-usuarios.html" class="menu-item"><span class="material-symbols-outlined">group</span><span>Gerenciar Usuários</span></a>
-        <a href="gerenciar-guias.html" class="menu-item"><span class="material-symbols-outlined">explore</span><span>Gerenciar Guias</span></a>
-        <a href="gerenciar-passeios.html" class="menu-item"><span class="material-symbols-outlined">luggage</span><span>Gerenciar Passeios</span></a>
+        <a href="gerenciar-produtos.html" class="menu-item"><span class="material-symbols-outlined">luggage</span><span>Gerenciar Produtos</span></a>
         <a href="gerenciar-agencias.html" class="menu-item"><span class="material-symbols-outlined">domain</span><span>Gerenciar Agências</span></a>
         <a href="cadastros.html" class="menu-item active"><span class="material-symbols-outlined">add_box</span><span>Cadastros</span></a>
         <a href="financeiro.html" class="menu-item"><span class="material-symbols-outlined">payments</span><span>Financeiro</span></a>
@@ -46,19 +45,19 @@
     <div class="dashboard-main">
       <header class="topbar">
         <div class="topbar-navigation">
-          <a href="cadastros.html" class="back-button-circle" title="Voltar para Cadastros">
+          <a href="cadastros.html" id="btnVoltarDinamico" class="back-button-circle" title="Voltar">
             <span class="material-symbols-outlined">arrow_back</span>
           </a>
           <div class="topbar-title">
-            <h1>Gerenciar Localizações</h1>
-            <p>Clique nos títulos para abrir os formulários de cadastro.</p>
+            <h1 id="tituloPagina">Gerenciar Localizações</h1>
+            <p id="subtituloPagina">Clique nos títulos para abrir os formulários de cadastro.</p>
           </div>
         </div>
       </header>
 
       <main class="content">
         
-        <section class="panel">
+        <section class="panel" id="sessaoPaises">
           <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="margin: 0;">Países Cadastrados</h2>
             <button class="primary-btn" onclick="toggleFormulario('formPais')" style="display: flex; align-items: center; gap: 5px;">
@@ -85,25 +84,14 @@
             <table class="admin-table">
               <thead><tr><th>País</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
               <tbody id="listaPaises">
-                <tr>
-                  <td>Brasil</td>
-                  <td style="text-align: right;">
-                    <div class="table-actions" style="justify-content: flex-end;">
-                      <button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button>
-                      <button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+                </tbody>
             </table>
           </div>
         </section>
 
-        <hr style="margin: 40px 0; border: 0; border-top: 2px dashed #eee;">
-
-        <section class="panel">
+        <section class="panel" id="sessaoEstados" style="display: none;">
           <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="margin: 0;">Estados Cadastrados</h2>
+            <h2 style="margin: 0;">Estados em <span id="labelNomePais" style="color: #00bfa6;"></span></h2>
             <button class="primary-btn" onclick="toggleFormulario('formEstado')" style="display: flex; align-items: center; gap: 5px;">
               <span class="material-symbols-outlined" style="font-size: 20px;">add</span> Novo Estado
             </button>
@@ -112,11 +100,7 @@
           <div id="formEstado" style="display: none; background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
             <form id="formCadastrarUF">
               <div class="form-grid">
-                <div class="form-group">
-                  <label for="fk08idpais">País</label>
-                  <select id="fk08idpais" required><option value="1">Brasil</option></select>
-                </div>
-                <div class="form-group">
+                <input type="hidden" id="fk08idpais"> <div class="form-group">
                   <label for="ma09nome">Estado</label>
                   <input type="text" id="ma09nome" placeholder="Ex: Maranhão" required />
                 </div>
@@ -134,29 +118,16 @@
 
           <div class="table-container">
             <table class="admin-table">
-              <thead><tr><th>UF</th><th>Estado</th><th>País</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
+              <thead><tr><th>UF</th><th>Estado</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
               <tbody id="listaEstados">
-                <tr>
-                  <td>MA</td>
-                  <td>Maranhão</td>
-                  <td>Brasil</td>
-                  <td style="text-align: right;">
-                    <div class="table-actions" style="justify-content: flex-end;">
-                      <button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button>
-                      <button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+                </tbody>
             </table>
           </div>
         </section>
 
-        <hr style="margin: 40px 0; border: 0; border-top: 2px dashed #eee;">
-
-        <section class="panel" style="margin-bottom: 50px;">
+        <section class="panel" id="sessaoCidades" style="display: none; margin-bottom: 50px;">
           <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="margin: 0;">Cidades Cadastradas</h2>
+            <h2 style="margin: 0;">Cidades em <span id="labelNomeUF" style="color: #00bfa6;"></span></h2>
             <button class="primary-btn" onclick="toggleFormulario('formCidade')" style="display: flex; align-items: center; gap: 5px;">
               <span class="material-symbols-outlined" style="font-size: 20px;">add</span> Nova Cidade
             </button>
@@ -165,11 +136,7 @@
           <div id="formCidade" style="display: none; background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
             <form id="formCadastrarCidade">
               <div class="form-grid">
-                <div class="form-group">
-                  <label for="fk09iduf">Estado (UF)</label>
-                  <select id="fk09iduf" required><option value="1">Maranhão</option></select>
-                </div>
-                <div class="form-group">
+                <input type="hidden" id="fk09iduf"> <div class="form-group">
                   <label for="ma10nome">Nome da Cidade</label>
                   <input type="text" id="ma10nome" placeholder="Ex: São Luís" required />
                 </div>
@@ -183,19 +150,9 @@
 
           <div class="table-container">
             <table class="admin-table">
-              <thead><tr><th>Cidade</th><th>Estado</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
+              <thead><tr><th>Cidade</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
               <tbody id="listaCidades">
-                <tr>
-                  <td>São Luís</td>
-                  <td>MA</td>
-                  <td style="text-align: right;">
-                    <div class="table-actions" style="justify-content: flex-end;">
-                      <button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button>
-                      <button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+                </tbody>
             </table>
           </div>
         </section>

@@ -39,8 +39,7 @@
       <nav class="sidebar-menu">
         <a href="index.html" class="menu-item"><span class="material-symbols-outlined">home</span><span>Home</span></a>
         <a href="gerenciar-usuarios.html" class="menu-item"><span class="material-symbols-outlined">group</span><span>Gerenciar Usuários</span></a>
-        <a href="gerenciar-guias.html" class="menu-item"><span class="material-symbols-outlined">explore</span><span>Gerenciar Guias</span></a>
-        <a href="gerenciar-passeios.html" class="menu-item"><span class="material-symbols-outlined">luggage</span><span>Gerenciar Passeios</span></a>
+        <a href="gerenciar-produtos.html" class="menu-item"><span class="material-symbols-outlined">luggage</span><span>Gerenciar Produtos</span></a>
         <a href="gerenciar-agencias.html" class="menu-item"><span class="material-symbols-outlined">domain</span><span>Gerenciar Agências</span></a>
         <a href="cadastros.html" class="menu-item active"><span class="material-symbols-outlined">add_box</span><span>Cadastros</span></a>
         <a href="financeiro.html" class="menu-item"><span class="material-symbols-outlined">payments</span><span>Financeiro</span></a>
@@ -104,13 +103,52 @@
                   <th style="width: 120px; text-align: right;">Ações</th>
                 </tr>
               </thead>
+              
               <tbody id="tabelaIdiomas">
                 <tr>
-                  <td>Português (BR)</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <img src="https://flagcdn.com/w20/br.png" alt="Brasil" style="border-radius: 2px;">
+                      <span id="nome-idioma-1">Português (BR)</span>
+                    </div>
+                  </td>
                   <td style="text-align: right;">
                     <div class="table-actions" style="justify-content: flex-end;">
-                      <button class="btn-action btn-edit" title="Editar"><span class="material-symbols-outlined">edit</span></button>
-                      <button class="btn-action btn-block" title="Excluir"><span class="material-symbols-outlined">delete</span></button>
+                      <button class="btn-action btn-edit" onclick="prepararEdicao(1, 'Português (BR)')" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <img src="https://flagcdn.com/w20/us.png" alt="EUA" style="border-radius: 2px;">
+                      <span id="nome-idioma-2">Inglês</span>
+                    </div>
+                  </td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicao(2, 'Inglês')" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <img src="https://flagcdn.com/w20/pt.png" alt="Portugal" style="border-radius: 2px;">
+                      <span id="nome-idioma-3">Português (PT)</span>
+                    </div>
+                  </td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicao(3, 'Português (PT)')" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -126,5 +164,6 @@
   <script src="../../js/parceiro/sidebar.js"></script>
   <script src="../../js/admin/index-admin.js"></script>
   <script src="../../js/admin/cadastros.js"></script>
+  <script src="../../js/admin/cadastrar-lingua.js"></script>
 </body>
 </html>

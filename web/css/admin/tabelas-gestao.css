@@ -70,3 +70,18 @@
 
 /* Texto auxiliar soft */
 .text-soft { color: #94a3b8; font-size: 12px; }
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.status-badge.ativo {
+    background-color: rgba(0, 191, 166, 0.1);
+    color: #00bfa6;
+}
+.status-badge.inativo {
+    background-color: rgba(255, 112, 112, 0.1);
+    color: #ff7070;
+}

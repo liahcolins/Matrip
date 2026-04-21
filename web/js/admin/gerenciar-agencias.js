@@ -1,4 +1,4 @@
-// Dados temporários para testar a tela (Sem IDs)
+// Dados temporários para testar a tela
 let allAgencias = [
   {razao_social: "Aventuras Maranhão LTDA", nome_fantasia: "Aventuras MA", cnpj: "12.345.678/0001-90", email: "contato@aventuras.com", telefone: "(98) 99999-1111", status: "ativo", passeios_ativos: 12 },
   {razao_social: "Lençóis Turismo EIRELI", nome_fantasia: "Lençóis Tour", cnpj: "98.765.432/0001-10", email: "reserva@lencoistour.com", telefone: "(98) 98888-2222", status: "pendente", passeios_ativos: 0 },
@@ -7,45 +7,38 @@ let allAgencias = [
 
 let filteredAgencias = [...allAgencias];
 
-// Atualiza os cartões lá de cima
+// 1. ATUALIZA AS MÉTRICAS DO TOPO
 function updateMetrics() {
   document.getElementById("metricTotal").textContent = filteredAgencias.length;
   document.getElementById("metricPendentes").textContent = filteredAgencias.filter(a => a.status === 'pendente').length;
   document.getElementById("metricAtivas").textContent = filteredAgencias.filter(a => a.status === 'ativo').length;
 }
 
-// Renderiza a lista sanfona
+// 2. RENDERIZA A LISTA SANFONA
 function renderAgencias(data) {
   const listContainer = document.getElementById("agenciasList");
   const emptyState = document.getElementById("emptyState");
   listContainer.innerHTML = "";
 
-  // Correção da lógica do Empty State
   if (!data || data.length === 0) {
     emptyState.classList.remove("hidden");
     return;
   }
   emptyState.classList.add("hidden");
 
-  // Usamos um contador (index) apenas para os elementos HTML não se perderem
   data.forEach((ag, index) => {
     const item = document.createElement("div");
     item.className = "list-item";
     item.id = `agencia-${index}`;
 
-    // PADRONIZAÇÃO DOS BOTÕES
-    let botoesAcao = '';
-    if(ag.status === 'pendente') {
-      botoesAcao = `
+    let botoesAcao = ag.status === 'pendente' ? `
         <button class="btn-action btn-unblock" onclick="alterarStatus('${ag.cnpj}', 'ativo')" title="Aprovar">
           <span class="material-symbols-outlined">check_circle</span> Aprovar Agência
         </button>
         <button class="btn-action btn-block" onclick="alterarStatus('${ag.cnpj}', 'rejeitado')" title="Rejeitar">
           <span class="material-symbols-outlined">cancel</span> Rejeitar
         </button>
-      `;
-    } else {
-      botoesAcao = `
+      ` : `
         <button class="btn-action btn-edit" onclick="alert('Editando agência: ${ag.nome_fantasia}')">
           <span class="material-symbols-outlined">edit</span> Editar Cadastro
         </button>
@@ -53,27 +46,39 @@ function renderAgencias(data) {
           <span class="material-symbols-outlined">block</span> Bloquear Acesso
         </button>
       `;
-    }
 
+    // LAYOUT REVISADO: Status alinhado à esquerda e ícones (guia e seta) na direita
     item.innerHTML = `
-      <div class="list-item-header" onclick="toggleAgencia(${index})">
+      <div class="list-item-header" style="display: flex; align-items: center; padding: 15px 20px; cursor: pointer; gap: 10px;">
         
-        <div style="display: flex; align-items: center; justify-content: center; width: 50px;">
+        <div style="display: flex; align-items: center; gap: 15px; flex: 2.5;" onclick="toggleAgencia(${index})">
           <span class="material-symbols-outlined" style="color: #94a3b8; font-size: 28px;">domain</span>
+          <div>
+            <h4 style="margin: 0; color: #023847;">${ag.nome_fantasia}</h4>
+            <small style="color: #64748b;">CNPJ: ${ag.cnpj}</small>
+          </div>
         </div>
-        
-        <div>
-          <h4 style="margin: 0;">${ag.nome_fantasia}</h4>
-          <small>CNPJ: ${ag.cnpj}</small>
+
+        <div style="flex: 2; color: #475569;" onclick="toggleAgencia(${index})">
+          <span style="display:block; font-size: 14px; font-weight: 500;">${ag.email}</span>
+          <small style="color: #94a3b8;">${ag.telefone}</small>
         </div>
-        <div>
-          <span style="display:block; font-size: 14px;">${ag.email}</span>
-          <small>${ag.telefone}</small>
+
+        <div style="flex: 1.2; display: flex; justify-content: flex-start;" onclick="toggleAgencia(${index})">
+          <span class="status-badge ${ag.status}" style="white-space: nowrap; min-width: 100px; text-align: center;">
+            ${ag.status.toUpperCase()}
+          </span>
         </div>
-        <div>
-           <span class="status-badge ${ag.status}">${ag.status.toUpperCase()}</span>
+
+        <div style="flex: 0.8; display: flex; align-items: center; justify-content: flex-end; gap: 25px;">
+          <button class="btn-action" onclick="event.stopPropagation(); abrirGestaoGuias('${ag.cnpj}', '${ag.nome_fantasia}')" 
+                  title="Gerenciar Guias" 
+                  style="background: rgba(2, 56, 71, 0.08); color: #023847; border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center;">
+            <span class="material-symbols-outlined" style="font-size: 22px;">explore</span>
+          </button>
+          
+          <span class="material-symbols-outlined arrow-icon" onclick="toggleAgencia(${index})" style="color: #cbd5e1; user-select: none;">expand_more</span>
         </div>
-        <span class="material-symbols-outlined arrow-icon">expand_more</span>
       </div>
 
       <div class="list-item-details">
@@ -82,7 +87,7 @@ function renderAgencias(data) {
             <h4>Dados da Empresa</h4>
             <p><strong>Razão Social:</strong> ${ag.razao_social}</p>
             <p><strong>CNPJ:</strong> ${ag.cnpj}</p>
-            <p><strong>Passeios Cadastrados:</strong> ${ag.passeios_ativos}</p>
+            <p><strong>Produtos Cadastrados:</strong> ${ag.passeios_ativos}</p>
           </div>
           <div class="info-block">
             <h4>Contato Principal</h4>
@@ -90,7 +95,7 @@ function renderAgencias(data) {
             <p><strong>Telefone:</strong> ${ag.telefone}</p>
           </div>
         </div>
-        <div class="action-bar" style="display: flex; gap: 10px;">
+        <div class="action-bar" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
           ${botoesAcao}
         </div>
       </div>
@@ -106,22 +111,28 @@ function toggleAgencia(index) {
   document.querySelectorAll('.list-item').forEach(item => {
     item.classList.remove('active');
     const icon = item.querySelector('.arrow-icon');
-    if(icon) icon.textContent = 'expand_more'; // Volta ícone padrão
+    if(icon) icon.textContent = 'expand_more';
   });
 
   if (!isOpen) {
     el.classList.add('active');
-    el.querySelector('.arrow-icon').textContent = 'expand_less'; // Ícone pra cima
+    el.querySelector('.arrow-icon').textContent = 'expand_less';
   }
 }
 
-// Simulador de ação agora busca pelo CNPJ
+// REDIRECIONAMENTO PARA A PÁGINA "AGENCIA-GUIAS"
+function abrirGestaoGuias(cnpj, nome) {
+    const nomeEncoded = encodeURIComponent(nome);
+    const cnpjEncoded = encodeURIComponent(cnpj);
+    window.location.href = `agencia-guias.html?cnpj=${cnpjEncoded}&nome=${nomeEncoded}`;
+}
+
 function alterarStatus(cnpj, novoStatus) {
   const agencia = allAgencias.find(a => a.cnpj === cnpj);
-  if(agencia && confirm(`Deseja alterar o status da agência ${agencia.nome_fantasia} para ${novoStatus.toUpperCase()}?`)) {
+  if(agencia && confirm(`Deseja alterar o status para ${novoStatus.toUpperCase()}?`)) {
       agencia.status = novoStatus;
       applyFilters(); 
-      alert("Status atualizado com sucesso!");
+      alert("Status atualizado!");
   }
 }
 
@@ -131,9 +142,7 @@ function applyFilters() {
 
   filteredAgencias = allAgencias.filter(a => {
     const matchStatus = !status || a.status.toLowerCase() === status;
-    const matchSearch = !search || 
-                        a.nome_fantasia.toLowerCase().includes(search) || 
-                        a.cnpj.includes(search);
+    const matchSearch = !search || a.nome_fantasia.toLowerCase().includes(search) || a.cnpj.includes(search);
     return matchStatus && matchSearch;
   });
 
@@ -141,26 +150,19 @@ function applyFilters() {
   updateMetrics();
 }
 
-// Eventos e Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("btnSearch")?.addEventListener("click", applyFilters);
-  document.getElementById("searchAgencia")?.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") applyFilters();
-  });
+  document.getElementById("searchAgencia")?.addEventListener("keypress", (e) => { if (e.key === "Enter") applyFilters(); });
   document.getElementById("filterStatus")?.addEventListener("change", applyFilters);
   document.getElementById("clearFiltersBtn")?.addEventListener("click", () => {
-    const searchInput = document.getElementById("searchAgencia");
-    const statusSelect = document.getElementById("filterStatus");
-    if(searchInput) searchInput.value = "";
-    if(statusSelect) statusSelect.value = "";
+    document.getElementById("searchAgencia").value = "";
+    document.getElementById("filterStatus").value = "";
     applyFilters();
   });
 
-  // Carrega a tela pela primeira vez
   renderAgencias(allAgencias);
   updateMetrics();
 
-  // Puxa os dados do usuário salvos no login
   const usuario = JSON.parse(localStorage.getItem('usuario'));
   if (usuario && usuario.email) {
     const adminEmail = document.getElementById('adminEmail');
@@ -168,11 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Faz o botão de Sair funcionar
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem('usuario');
-    window.location.href = '../../index.html'; // Redireciona para fora
+    window.location.href = '../../index.html';
   });
 }

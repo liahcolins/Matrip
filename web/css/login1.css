@@ -72,23 +72,41 @@ body.login-page {
   animation: subtlePulse 8s ease-in-out infinite;
 }
 
-/* Logo */
-.brand{
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  /* Reduzimos o espaço acima para compensar o aumento da logo */
+/* ====== Logo com Efeito Circular ====== */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Centraliza o círculo com a logo */
+  gap: 12px;
   margin: -10px auto 0px auto; 
-  text-decoration:none;
-  color:var(--ink);
+  text-decoration: none;
+  color: var(--ink);
+  position: relative; /* Necessário para ancorar o círculo */
 }
 
-.brand img{
-  width: 170px; /* AUMENTADO: de 120px para 170px */
-  height: auto; /* IMPORTANTE: Deixa a altura automática para não distorcer */
-  max-height: 140px; /* Impede que a imagem empurre tudo para baixo */
-  object-fit:contain;
-  border-radius:12px;
+/* O círculo fantasma e sombreamento */
+.brand::before {
+  content: "";
+  position: absolute;
+  width: 125px; /* AUMENTADO: Era 110px, agora a bolinha está maior */
+  height: 125px; /* AUMENTADO */
+  margin-left: 8px; /* NOVO: Empurra a bolinha mais para a direita */
+  background: radial-gradient(circle, rgba(0, 191, 166, 0.08) 0%, transparent 80%);
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(0, 191, 166, 0.18); /* Cor ciano */
+  z-index: -1; /* Joga para trás da logo */
+  transition: transform 0.3s ease;
+}
+
+.brand:hover::before {
+  transform: scale(1.1); /* Dá uma leve pulsada ao passar o mouse */
+}
+
+.brand img {
+  width: 170px; 
+  height: auto; 
+  max-height: 140px; 
+  object-fit: contain;
 }
 
 /* ===== Títulos ===== */

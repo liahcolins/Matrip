@@ -27,3 +27,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Função Global para Abrir/Fechar Formulários com Animação
+function toggleFormulario(idConteiner) {
+    const conteiner = document.getElementById(idConteiner);
+    if (!conteiner) return;
+
+    if (conteiner.style.display === "none" || conteiner.style.display === "") {
+        // ENTRADA
+        conteiner.classList.remove('form-saindo');
+        conteiner.style.display = "block";
+        conteiner.classList.add('form-animado');
+
+        // Tenta focar no primeiro input que encontrar
+        const primeiroInput = conteiner.querySelector('input:not([type="hidden"])');
+        if (primeiroInput) setTimeout(() => primeiroInput.focus(), 100);
+        
+    } else {
+        // SAÍDA
+        conteiner.classList.remove('form-animado');
+        conteiner.classList.add('form-saindo');
+
+        setTimeout(() => {
+            conteiner.style.display = "none";
+            conteiner.classList.remove('form-saindo');
+            
+            // Limpa o formulário automaticamente se houver um <form> dentro
+            const formularioInterno = conteiner.querySelector('form');
+            if (formularioInterno) formularioInterno.reset();
+            
+            // Se houver lógica de edição (como nos Idiomas), reseta as flags globais
+            if (typeof modoEdicaoIdioma !== 'undefined') modoEdicaoIdioma = false;
+        }, 300); // Tempo batendo com o CSS
+    }
+}
+
