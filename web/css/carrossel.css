@@ -5,7 +5,7 @@
 
 /* ====== Carousel refinado com legenda animada + blur ====== */
 :root {
-  --car-w: max(320px, min(1200px, 92vw));
+  --car-w: max(320px, min(1140px, 92vw));
   --radius: 14px;
   --shadow: 0 5px 25px rgba(0, 0, 0, .22);
   --caption-bg: rgba(0, 0, 0, .45);

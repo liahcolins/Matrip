@@ -29,8 +29,7 @@
       <nav class="sidebar-menu">
         <a href="index.html" class="menu-item"><span class="material-symbols-outlined">home</span><span>Home</span></a>
         <a href="gerenciar-usuarios.html" class="menu-item"><span class="material-symbols-outlined">group</span><span>Gerenciar Usuários</span></a>
-        <a href="gerenciar-guias.html" class="menu-item"><span class="material-symbols-outlined">explore</span><span>Gerenciar Guias</span></a>
-        <a href="gerenciar-passeios.html" class="menu-item"><span class="material-symbols-outlined">luggage</span><span>Gerenciar Passeios</span></a>
+        <a href="gerenciar-produtos.html" class="menu-item"><span class="material-symbols-outlined">luggage</span><span>Gerenciar Produtos</span></a>
         <a href="gerenciar-agencias.html" class="menu-item"><span class="material-symbols-outlined">domain</span><span>Gerenciar Agências</span></a>
         <a href="cadastros.html" class="menu-item active"><span class="material-symbols-outlined">add_box</span><span>Cadastros</span></a>
         <a href="financeiro.html" class="menu-item"><span class="material-symbols-outlined">payments</span><span>Financeiro</span></a>
@@ -51,7 +50,7 @@
           </a>
           <div class="topbar-title">
             <h1>Gerenciar Categorias</h1>
-            <p>Defina as categorias de passeios para organizar as experiências.</p>
+            <p>Defina as categorias de produtos para organizar as experiências.</p>
           </div>
         </div>
       </header>
@@ -68,16 +67,24 @@
 
           <div id="formCat" style="display: none; background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
             <form id="formCadastrarCategoria">
-              <div class="form-grid" style="grid-template-columns: 1fr;">
+              <div class="form-grid">
                 <div class="form-group">
                   <label for="ma11nome">Nome da Categoria</label>
-                  <input type="text" id="ma11nome" placeholder="Ex: Ecoturismo, Praia, City Tour..." required />
+                  <input type="text" id="ma11nome" placeholder="Ex: Ecoturismo, Praia..." required />
+                </div>
+                
+                <div class="form-group">
+                  <label for="ma11status">Status</label>
+                  <select id="ma11status">
+                    <option value="0">Ativo</option>
+                    <option value="1">Inativo</option>
+                  </select>
                 </div>
               </div>
 
               <div class="form-actions" style="margin-top: 15px;">
-                <button type="submit" class="primary-btn">Salvar Categoria</button>
-                <button type="button" class="secondary-btn" onclick="toggleFormulario('formCat')">Cancelar</button>
+                <button type="submit" id="btnSalvarCategoria" class="primary-btn">Salvar Categoria</button>
+                <button type="button" class="secondary-btn" onclick="resetarFormCategoria()">Cancelar</button>
               </div>
             </form>
           </div>
@@ -87,15 +94,69 @@
               <thead>
                 <tr>
                   <th>Nome da Categoria</th>
-                  <th style="width: 120px; text-align: right;">Ações</th>
+                  <th>Status</th> <th style="width: 80px; text-align: right;">Ações</th>
                 </tr>
               </thead>
               <tbody id="listaCategorias">
-                <tr><td>Passeios</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>Aventuras</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>Culinária</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>Cultural</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
-                <tr><td>Ecoturismo</td><td style="text-align: right;"><div class="table-actions" style="justify-content: flex-end;"><button class="btn-action btn-edit"><span class="material-symbols-outlined">edit</span></button><button class="btn-action btn-block"><span class="material-symbols-outlined">delete</span></button></div></td></tr>
+                <tr>
+                  <td>Passeios</td>
+                  <td><span class="status-badge ativo">Ativo</span></td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(1, 'Passeios', 0)">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Aventuras</td>
+                  <td><span class="status-badge ativo">Ativo</span></td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(2, 'Aventuras', 0)">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Culinária</td>
+                  <td><span class="status-badge ativo">Ativo</span></td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(3, 'Culinária', 0)">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Cultural</td>
+                  <td><span class="status-badge ativo">Ativo</span></td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(4, 'Cultural', 0)">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Ecoturismo</td>
+                  <td><span class="status-badge ativo">Ativo</span></td>
+                  <td style="text-align: right;">
+                    <div class="table-actions" style="justify-content: flex-end;">
+                      <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(5, 'Ecoturismo', 0)">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

@@ -433,3 +433,36 @@ aside.sidebar .sidebar-footer {
     /* Reduzimos o padding embaixo para colar mais no final da tela */
     padding: 20px 20px 10px 20px !important; 
 }
+
+/* Animação de entrada (Slide Down + Fade In) */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animação de saída (Slide Up + Fade Out) */
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Classe que será aplicada ao formulário */
+.form-animado {
+    animation: slideDown 0.4s ease-out forwards;
+}
+
+.form-saindo {
+    animation: slideUp 0.3s ease-in forwards;
+}
