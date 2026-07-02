@@ -1,85 +1,53 @@
-# MaTrip – Plataforma de Turismo
+# Matrip
 
-## Descrição do Projeto
+O **Matrip** é um aplicativo de turismo desenvolvido para facilitar a gestão de parceiros, contratos e serviços turísticos por meio de um painel administrativo.  
+A proposta do sistema é permitir que administradores tenham controle completo sobre os parceiros cadastrados na plataforma, organizando informações importantes para o funcionamento do aplicativo.
 
-Este projeto consiste em uma plataforma digital composta por um website e um aplicativo mobile, desenvolvida para conectar turistas a guias e agências de turismo.
+## Sobre o Projeto
 
-A plataforma permite:
+O Matrip é voltado para o setor de turismo, permitindo que administradores gerenciem empresas, prestadores de serviço e parceiros envolvidos na plataforma.
 
-- Cadastro de guias e agências;
-- Cadastro de passeios e serviços turísticos;
-- Compra de produtos turísticos por clientes;
-- Gerenciamento administrativo pela startup MaTrip.
+Por meio do sistema, os administradores podem cadastrar novos parceiros, atualizar informações, remover cadastros, visualizar contratos e manter o controle geral das operações do aplicativo.
 
-O sistema é dividido em duas partes principais:
+## Funcionalidades
 
-- Front-end Web
-- Aplicativo Mobile
-- Back-end integrado ao banco de dados
+### Área Administrativa
 
----
+- Cadastro de parceiros;
+- Remoção de parceiros;
+- Atualização de informações dos parceiros;
+- Visualização de contratos;
+- Controle de parceiros ativos e inativos;
+- Gerenciamento das informações gerais do aplicativo;
+- Organização dos dados relacionados aos serviços turísticos.
 
-## IDE Utilizada
+## Objetivo
 
-Para o desenvolvimento deste projeto foi utilizada a seguinte IDE:
+O principal objetivo do Matrip é centralizar a administração de parceiros turísticos em uma única plataforma, tornando o processo mais organizado, prático e eficiente.
 
-- Visual Studio Code
+## Público-alvo
 
----
+O sistema é destinado principalmente a:
+
+- Administradores do aplicativo;
+- Empresas parceiras do setor turístico;
+- Prestadores de serviços turísticos;
+- Agências, guias, hotéis, restaurantes e outros parceiros relacionados ao turismo.
 
 ## Tecnologias Utilizadas
 
-- Linguagens: HTML, CSS, JavaScript
-- Frameworks: React, React Native, Express.js
-- Bibliotecas Axios, React Router, Bootstrap
-- Ambiente: Node.js
-- API RESTful para integração entre front-end e banco de dados
-- Banco de dados (SGBD): MySQL
+> Preencha esta parte de acordo com as tecnologias usadas no seu projeto.
 
----
+Exemplo:
+
+- Front-end: React Native / Flutter / HTML, CSS e JavaScript
+- Back-end: Node.js / Java / Python / PHP
+- Banco de Dados: MySQL / PostgreSQL / Firebase / MongoDB
+- Controle de versão: Git e GitHub
 
 ## Como Executar o Projeto
 
-### Executar o Front-end (Web)
+### 1. Clone o repositório
 
-1. Acesse a pasta backend: cd backend
-
-2. Inicie o servidor: node src/server.js
-
-Ou utilize uma extensão como Live Server no VS Code.
-
----
-
-### Executar o Back-end
-
-1. Acesse a pasta do back-end: cd backend
-
-2. Instale as dependências: npm install
-
-3. Inicie o servidor: node src/server.js
-
----
-
-## Banco de Dados
-
-O script completo do banco de dados está disponível na pasta: /Banco_de_Dados/script.sql
-
-
-Para utilizá-lo:
-
-1. Abrir o MySQL Workbench  
-2. Executar o arquivo script.sql  
-3. O banco será criado com dados iniciais  
-
----
-
-## Estrutura do Repositório
-
-- web/ – código do site  
-- Aplicativo/ – código do aplicativo
-- backend/ - integração com o banco de dados
-- Banco_de_Dados/ – script do banco de dados  
-- Vídeo_da_Apresentação/ – vídeo de apresentação  
-
----
-
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
