@@ -1,25 +1,6 @@
 var API_BASE = API_BASE || "";
 
 function debugLog(msg) {
-    let d = document.getElementById('debug-log-div');
-    if (!d) {
-        d = document.createElement('div');
-        d.id = 'debug-log-div';
-        d.style.position = 'fixed';
-        d.style.bottom = '10px';
-        d.style.right = '10px';
-        d.style.background = 'rgba(0,0,0,0.85)';
-        d.style.color = 'lime';
-        d.style.padding = '15px';
-        d.style.borderRadius = '8px';
-        d.style.fontSize = '12px';
-        d.style.fontFamily = 'monospace';
-        d.style.zIndex = '99999';
-        d.style.maxHeight = '200px';
-        d.style.overflowY = 'auto';
-        document.body.appendChild(d);
-    }
-    d.innerHTML += '<div>[' + new Date().toLocaleTimeString() + '] ' + msg + '</div>';
     console.log(msg);
     
     // Envia log para o terminal do Spring Boot

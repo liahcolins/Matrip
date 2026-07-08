@@ -106,13 +106,4 @@ if (googleBtn) {
   });
 }
 
-// ==============================
-// LOGIN COM FACEBOOK
-// ==============================
-const facebookBtn = document.getElementById("facebookLoginBtn");
 
-if (facebookBtn) {
-  facebookBtn.addEventListener("click", () => {
-    window.location.href = "http://localhost:3000/auth/facebook";
-  });
-}
