@@ -120,3 +120,86 @@ async function abrirNivelCidades(id, nome) {
             </tr>`;
     });
 }
+
+// Helper to open/close forms (fallback if toggleFormulario is not in index-admin.js)
+function toggleFormulario(id) {
+    const form = document.getElementById(id);
+    if (form) {
+        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    }
+}
+window.toggleFormulario = toggleFormulario;
+
+// --- SUBMIT HANDLERS ---
+
+// 1. Cadastrar País
+document.getElementById('formCadastrarPais')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('ma08nome').value.trim();
+
+    try {
+        const res = await fetch('/api/localidades/paises', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome })
+        });
+
+        if (!res.ok) throw new Error("Erro ao cadastrar país");
+
+        alert("País cadastrado com sucesso!");
+        document.getElementById('formCadastrarPais').reset();
+        toggleFormulario('formPais');
+        exibirPaises();
+    } catch (err) {
+        alert("Erro: " + err.message);
+    }
+});
+
+// 2. Cadastrar Estado (UF)
+document.getElementById('formCadastrarUF')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('ma09nome').value.trim();
+    const sigla = document.getElementById('ma09sigla').value.trim();
+    const paisId = document.getElementById('fk08idpais').value;
+
+    try {
+        const res = await fetch('/api/localidades/ufs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, sigla, paisId })
+        });
+
+        if (!res.ok) throw new Error("Erro ao cadastrar estado");
+
+        alert("Estado cadastrado com sucesso!");
+        document.getElementById('formCadastrarUF').reset();
+        toggleFormulario('formEstado');
+        abrirNivelEstados(dadosContexto.paisId, dadosContexto.paisNome);
+    } catch (err) {
+        alert("Erro: " + err.message);
+    }
+});
+
+// 3. Cadastrar Cidade
+document.getElementById('formCadastrarCidade')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('ma10nome').value.trim();
+    const ufId = document.getElementById('fk09iduf').value;
+
+    try {
+        const res = await fetch('/api/localidades/cidades', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, ufId })
+        });
+
+        if (!res.ok) throw new Error("Erro ao cadastrar cidade");
+
+        alert("Cidade cadastrada com sucesso!");
+        document.getElementById('formCadastrarCidade').reset();
+        toggleFormulario('formCidade');
+        abrirNivelCidades(dadosContexto.ufId, dadosContexto.ufNome);
+    } catch (err) {
+        alert("Erro: " + err.message);
+    }
+});

@@ -34,11 +34,20 @@ function renderCart() {
 
   if (!container) return;
 
+  const checkoutBtn = document.getElementById("checkoutBtn");
+
   if (cart.length === 0) {
     container.innerHTML =
       `<div class="alert alert-info">Seu carrinho está vazio.</div>`;
     updateSummary(cart);
+    if (checkoutBtn) {
+      checkoutBtn.disabled = true;
+    }
     return;
+  }
+
+  if (checkoutBtn) {
+    checkoutBtn.disabled = false;
   }
 
   container.innerHTML = cart.map(item => `
