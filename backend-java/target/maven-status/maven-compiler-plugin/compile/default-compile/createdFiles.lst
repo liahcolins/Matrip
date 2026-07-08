@@ -14,12 +14,15 @@ com\matrip\controller\PasseioController.class
 com\matrip\MatripApplication.class
 com\matrip\controller\OAuthController.class
 com\matrip\controller\GuiaController.class
+com\matrip\controller\LocalidadeController.class
 com\matrip\config\WebConfig.class
 com\matrip\repository\CategoriaRepository.class
 com\matrip\controller\UsuarioController$TipoRequest.class
 com\matrip\entity\Servico.class
 com\matrip\entity\Categoria.class
+com\matrip\controller\LinguaController.class
 com\matrip\controller\PasswordController$EmailRequest.class
+com\matrip\controller\DebugController.class
 com\matrip\controller\PagamentoController$CartaoRequest.class
 com\matrip\controller\UsuarioController.class
 com\matrip\controller\PasswordController.class
