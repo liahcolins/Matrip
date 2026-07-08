@@ -710,14 +710,5 @@ document.addEventListener('change', (e) => {
   }
 });
 
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith('image/')) {
-      cb(new Error('Apenas imagens são permitidas'));
-    } else {
-      cb(null, true);
-    }
-  }
-});
+
 

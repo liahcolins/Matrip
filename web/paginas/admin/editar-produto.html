@@ -92,27 +92,35 @@
                     <label>Nome do Produto</label>
                     <input type="text" id="ma12nome" required>
                   </div>
-                  <div class="form-group"><label>País</label><select id="fk08idpais" required><option value="1">Brasil</option></select></div>
-                  <div class="form-group"><label>UF (Estado)</label><select id="fk09idestado" required></select></div>
-                  <div class="form-group"><label>Cidade de Destino</label><select id="fk10idcidade" required></select></div>
-                  <div class="form-group"><label>Categoria</label><select id="fk11idcategoria" required></select></div>
-                  <div class="form-group" style="grid-column: span 2;"><label>Descrição Detalhada</label><textarea id="ma12descricao" rows="4"></textarea></div>
-                </div>
+                   <div class="form-group"><label>País</label><select id="fk08idpais" required><option value="1">Brasil</option></select></div>
+                   <div class="form-group"><label>UF (Estado)</label><input type="text" id="fk09idestado" required maxlength="2" placeholder="Ex: MA"></div>
+                   <div class="form-group"><label>Cidade de Destino</label><input type="text" id="fk10idcidade" required placeholder="Ex: Barreirinhas"></div>
+                   <div class="form-group"><label>Categoria</label><select id="fk11idcategoria" required></select></div>
+                   <div class="form-group" style="grid-column: span 2;"><label>Descrição Detalhada</label><textarea id="ma12descricao" rows="4"></textarea></div>
+                 </div>
+ 
+                 <h3 style="font-size: 16px; color: #11c5b6; margin-top: 30px; margin-bottom: 20px;">Logística e Restrições</h3>
+                 <div class="form-grid">
+                   <div class="form-group"><label>Oferece Transfer?</label><select id="ma12transfer"><option value="0">Sim</option><option value="1">Não</option></select></div>
+                   <div class="form-group"><label>Idade Mínima</label><input type="number" id="ma12idademinima"></div>
+                   <div class="form-group"><label>Altura Mínima (m)</label><input type="number" step="0.01" id="ma12alturaminima"></div>
+                   <div class="form-group"><label>Peso Mínimo (kg)</label><input type="number" step="0.01" id="ma12pesominimo"></div>
+                   <div class="form-group"><label>Peso Máximo (kg)</label><input type="number" step="0.01" id="ma12pesomaximo"></div>
+                   <div class="form-group"><label>Produto em Destaque?</label><select id="ma12tprodutodestaque"><option value="0">Não</option><option value="1">Sim</option></select></div>
+                 </div>
 
-                <h3 style="font-size: 16px; color: #11c5b6; margin-top: 30px; margin-bottom: 20px;">Logística e Restrições</h3>
-                <div class="form-grid">
-                  <div class="form-group"><label>Oferece Transfer?</label><select id="ma12transfer"><option value="0">Sim</option><option value="1">Não</option></select></div>
-                  <div class="form-group"><label>Idade Mínima</label><input type="number" id="ma12idademinima"></div>
-                  <div class="form-group"><label>Altura Mínima (m)</label><input type="number" step="0.01" id="ma12alturaminima"></div>
-                  <div class="form-group"><label>Peso Mínimo (kg)</label><input type="number" step="0.01" id="ma12pesominimo"></div>
-                  <div class="form-group"><label>Peso Máximo (kg)</label><input type="number" step="0.01" id="ma12pesomaximo"></div>
-                  <div class="form-group"><label>Produto em Destaque?</label><select id="ma12tprodutodestaque"><option value="0">Não</option><option value="1">Sim</option></select></div>
-                </div>
-              </div>
-              <div class="form-actions" style="margin-top: 30px; display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-                <button type="button" class="primary-btn" onclick="goToStep(2)">Avançar</button>
-              </div>
-            </div>
+                 <h3 style="font-size: 16px; color: #11c5b6; margin-top: 30px; margin-bottom: 20px;">Preços (R$)</h3>
+                 <div class="form-grid">
+                   <div class="form-group"><label>Valor Adulto (R$)</label><input type="number" step="0.01" id="valorAdulto" required></div>
+                   <div class="form-group"><label>Valor Estudante (R$)</label><input type="number" step="0.01" id="valorEstudante" required></div>
+                   <div class="form-group"><label>Valor Criança (R$)</label><input type="number" step="0.01" id="valorCrianca" required></div>
+                   <div class="form-group"><label>Valor Final / Base (R$)</label><input type="number" step="0.01" id="valorFinal" required></div>
+                 </div>
+               </div>
+               <div class="form-actions" style="margin-top: 30px; display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                 <button type="button" class="primary-btn" onclick="goToStep(2)">Avançar</button>
+               </div>
+             </div>
 
             <div class="step-content" id="step-2">
               <div class="form-section">
