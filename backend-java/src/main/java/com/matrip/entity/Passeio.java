@@ -3,7 +3,6 @@ package com.matrip.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "passeios")
@@ -67,28 +66,6 @@ public class Passeio {
 
     @Column(name = "informacoes_importantes", columnDefinition = "TEXT")
     private String informacoesImportantes;
-
-    @Transient
-    private String imagem;
-
-    @Transient
-    private List<String> imagens;
-
-    public String getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
-    public List<String> getImagens() {
-        return imagens;
-    }
-
-    public void setImagens(List<String> imagens) {
-        this.imagens = imagens;
-    }
 
     public Passeio() {}
 
