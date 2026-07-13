@@ -19,17 +19,26 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry registry) {
+        // Redireciona a raiz (/) para o arquivo index.html servido estaticamente
+        registry.addViewController("/").setViewName("forward:/index.html");
+    }
+
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Obter os caminhos absolutos normalizados sem barras duplas
         String baseDir = Paths.get("..").toAbsolutePath().normalize().toString().replace("\\", "/");
+        String webDir = "file:" + baseDir + "/web/";
         String uploadsDir = "file:" + baseDir + "/backend-java/uploads/";
 
-        // Apenas mapeia a rota de uploads do disco local
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(uploadsDir)
-                .setCachePeriod(0);
-
-        // Mapeia os recursos estáticos sob static/ no classpath
-        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
-        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+        // Registrar os manipuladores de recursos estáticos com cache desabilitado (0s) para desenvolvimento
+        registry.addResourceHandler("/css/**").addResourceLocations(webDir + "css/").setCachePeriod(0);
+        registry.addResourceHandler("/js/**").addResourceLocations(webDir + "js/").setCachePeriod(0);
+        registry.addResourceHandler("/img/**").addResourceLocations(webDir + "img/").setCachePeriod(0);
+        registry.addResourceHandler("/paginas/**").addResourceLocations(webDir + "paginas/").setCachePeriod(0);
+        registry.addResourceHandler("/uploads/**").addResourceLocations(uploadsDir).setCachePeriod(0);
+        
+        // Mapear raiz do projeto para servir o index.html
+        registry.addResourceHandler("/**").addResourceLocations(webDir).setCachePeriod(0);
     }
 }
