@@ -67,7 +67,7 @@ function inicializarIndexAdmin() {
             const agencias = resAgencias.ok ? await resAgencias.json() : [];
 
             // Buscar Usuários
-            const resUsuarios = await fetch(`${API_BASE}/admin/usuarios`);
+            const resUsuarios = await fetch(`${API_BASE}/usuarios`);
             const usuarios = resUsuarios.ok ? await resUsuarios.json() : [];
 
             // Buscar Passeios

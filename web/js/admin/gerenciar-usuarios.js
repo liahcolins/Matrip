@@ -24,8 +24,8 @@ function inicializarGerenciarUsuarios() {
     async function carregarUsuarios() {
         if (window.debugLog) window.debugLog("carregarUsuarios() chamada");
         try {
-            if (window.debugLog) window.debugLog("Efetuando fetch para " + API_BASE + "/admin/usuarios");
-            const res = await fetch(`${API_BASE}/admin/usuarios`);
+            if (window.debugLog) window.debugLog("Efetuando fetch para " + API_BASE + "/usuarios");
+            const res = await fetch(`${API_BASE}/usuarios`);
             if (window.debugLog) window.debugLog("Fetch concluído. Status: " + res.status);
             if (!res.ok) throw new Error("Erro ao buscar usuários (HTTP " + res.status + ")");
             allUsers = await res.json();

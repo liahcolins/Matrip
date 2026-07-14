@@ -151,7 +151,14 @@ function togglePasseio(id) {
 
 function applyFilters() {
   const search = (document.getElementById("searchPasseio")?.value || "").toLowerCase().trim();
-  filteredPasseios = allPasseios.filter(p => (p.local || "").toLowerCase().includes(search));
+  const cidade = (document.getElementById("filterCidade")?.value || "").toLowerCase().trim();
+
+  filteredPasseios = allPasseios.filter(p => {
+    const matchesSearch = !search || (p.local || "").toLowerCase().includes(search) || (p.descricao || "").toLowerCase().includes(search);
+    const matchesCidade = !cidade || (p.cidade || "").toLowerCase().includes(cidade);
+    return matchesSearch && matchesCidade;
+  });
+
   renderPasseios(filteredPasseios);
 }
 
@@ -173,6 +180,29 @@ async function bloquearPasseioAdmin(id) {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("btnSearch")?.addEventListener("click", applyFilters);
+  
+  // Registrar botão Limpar Filtros
+  document.getElementById("clearFiltersBtn")?.addEventListener("click", () => {
+    const searchInput = document.getElementById("searchPasseio");
+    if (searchInput) searchInput.value = "";
+    
+    const filterCidade = document.getElementById("filterCidade");
+    if (filterCidade) filterCidade.value = "";
+
+    const filterAgencia = document.getElementById("filterAgencia");
+    if (filterAgencia) filterAgencia.value = "";
+
+    applyFilters();
+  });
+
+  // Permitir busca ao pressionar Enter nos inputs
+  document.getElementById("searchPasseio")?.addEventListener("keyup", (e) => {
+    if (e.key === 'Enter') applyFilters();
+  });
+  document.getElementById("filterCidade")?.addEventListener("keyup", (e) => {
+    if (e.key === 'Enter') applyFilters();
+  });
+
   loadPasseios();
   const usuario = JSON.parse(localStorage.getItem('usuario'));
   if (usuario?.email) document.getElementById('adminEmail').textContent = usuario.email;

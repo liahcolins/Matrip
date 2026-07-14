@@ -17,6 +17,9 @@ public class Categoria {
     @Column(name = "criado_em", insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime criadoEm;
 
+    @Column(nullable = false, length = 20)
+    private String status = "ativo";
+
     public Categoria() {}
 
     public Integer getId() {
@@ -41,5 +44,13 @@ public class Categoria {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+
+    public String getStatus() {
+        return status == null ? "ativo" : status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

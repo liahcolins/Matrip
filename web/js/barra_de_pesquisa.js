@@ -15,112 +15,37 @@ fetch('paginas/barra_de_pesquisa.html')
     }
 
     // ====== Animação fade-in ======
-    const barra = container.querySelector('.container');
+    const barra = container.querySelector('.search-container');
     if (barra) {
       barra.classList.add('barra-fadein');
       requestAnimationFrame(() => barra.classList.add('show'));
     }
 
-    // ====== Inicializa dropdowns do Bootstrap ======
-    const dropdownTriggers = container.querySelectorAll('.dropdown-toggle');
-    dropdownTriggers.forEach(trigger => new bootstrap.Dropdown(trigger));
-
-    // ====== Dados de estados e municípios ======
-    const estados = {
-      "AC": ["Rio Branco", "Cruzeiro do Sul", "Sena Madureira"],
-      "AL": ["Maceió", "Arapiraca", "Penedo"],
-      "AM": ["Manaus", "Parintins", "Itacoatiara"],
-      "AP": ["Macapá", "Santana"],
-      "BA": ["Salvador", "Feira de Santana", "Ilhéus", "Itabuna"],
-      "CE": ["Fortaleza", "Juazeiro do Norte", "Sobral"],
-      "DF": ["Brasília"],
-      "ES": ["Vitória", "Vila Velha", "Serra"],
-      "GO": ["Goiânia", "Anápolis", "Aparecida de Goiânia"],
-      "MA": ["São Luís", "Imperatriz", "Barreirinhas", "Santo Amaro", "Paulino Neves"],
-      "MG": ["Belo Horizonte", "Uberlândia", "Ouro Preto"],
-      "MS": ["Campo Grande", "Dourados"],
-      "MT": ["Cuiabá", "Rondonópolis"],
-      "PA": ["Belém", "Santarém", "Marabá"],
-      "PB": ["João Pessoa", "Campina Grande"],
-      "PE": ["Recife", "Olinda", "Petrolina"],
-      "PI": ["Teresina", "Parnaíba"],
-      "PR": ["Curitiba", "Londrina", "Maringá"],
-      "RJ": ["Rio de Janeiro", "Niterói", "Petrópolis", "Angra dos Reis"],
-      "RN": ["Natal", "Mossoró"],
-      "RO": ["Porto Velho", "Ji-Paraná"],
-      "RR": ["Boa Vista"],
-      "RS": ["Porto Alegre", "Caxias do Sul", "Gramado"],
-      "SC": ["Florianópolis", "Joinville", "Blumenau"],
-      "SE": ["Aracaju", "Lagarto"],
-      "SP": ["São Paulo", "Campinas", "Santos", "São José dos Campos"],
-      "TO": ["Palmas", "Araguaína"]
-    };
-
-    // ====== Referências de elementos ======
-    const ufList = container.querySelector('#ufList');
-    const municipioList = container.querySelector('#municipioList');
-    const ufButton = container.querySelector('#dropdownUF');
-    const municipioButton = container.querySelector('#dropdownMunicipio');
-
-    // ====== Preenche lista de UFs ======
-    Object.keys(estados).forEach(uf => {
-      const li = document.createElement('li');
-      li.innerHTML = `<button class="dropdown-item" type="button">${uf}</button>`;
-      ufList.appendChild(li);
-    });
-
-    // ====== Evento: selecionar UF ======
-    ufList.querySelectorAll('.dropdown-item').forEach(item => {
-      item.addEventListener('click', e => {
-        e.preventDefault(); // 🔥 evita scroll ao topo
-
-        const uf = e.target.textContent;
-        ufButton.textContent = uf;
-        municipioButton.textContent = "Município";
-        municipioList.innerHTML = '';
-
-        // Popula municípios da UF selecionada
-        estados[uf].forEach(m => {
-          const li = document.createElement('li');
-          li.innerHTML = `<button class="dropdown-item" type="button">${m}</button>`;
-          municipioList.appendChild(li);
-        });
-
-        // Reativa o dropdown dos municípios
-        municipioList.querySelectorAll('.dropdown-item').forEach(mItem => {
-          mItem.addEventListener('click', ev => {
-            ev.preventDefault(); // 🔥 evita scroll também aqui
-            municipioButton.textContent = ev.target.textContent;
-          });
-        });
-      });
-    });
-
-    console.log("✅ Barra de pesquisa carregada com UFs e municípios!");
+    console.log("✅ Barra de pesquisa IA carregada!");
     // ====== Botão Buscar ======
-    const btnBuscar = container.querySelector('.btn-brand');
+    const btnBuscar = container.querySelector('#btnAISearch');
+    const aiInput = container.querySelector('#aiSearchInput');
 
-    btnBuscar.addEventListener('click', () => {
-      const estado = ufButton.textContent;
-      const cidade = municipioButton.textContent;
+    if (btnBuscar) {
+      btnBuscar.addEventListener('click', () => {
+        const query = aiInput?.value.trim();
+        buscarPasseiosComIA(query);
+      });
+    }
 
-      if (estado === 'UF' || cidade === 'Município') {
-        alert('Selecione o estado e o município');
-        return;
-      }
-
-      buscarPasseios(estado, cidade);
-    });
+    if (aiInput && btnBuscar) {
+      aiInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          btnBuscar.click();
+        }
+      });
+    }
   })
   .catch(err => console.error("❌ Erro ao carregar barra de pesquisa:", err));
 
 
 function renderizarFlashcards(passeios) {
   const container = document.getElementById('flashcards-container');
-
-  // recria a row (importante pro Bootstrap)
-  //container.innerHTML = '<div class="row" id="flashcards-row"></div>'; modifiquei aqui
-  //container.innerHTML = '<div class="cards-row" id="flashcards-row" style="flex-wrap: wrap;"></div>';
   container.innerHTML = '<div class="cards-row" id="flashcards-row"></div>';
   const row = document.getElementById('flashcards-row');
 
@@ -128,7 +53,7 @@ function renderizarFlashcards(passeios) {
     row.innerHTML = `
       <div class="col-12">
         <div class="alert alert-warning text-center">
-          😕 Nenhum passeio encontrado para essa região.
+          Nenhum passeio encontrado para essa região.
         </div>
       </div>
     `;
@@ -139,8 +64,6 @@ function renderizarFlashcards(passeios) {
     row.innerHTML += criarFlashcard(p);
   });
 }
-
-//modifiquei para ao invés de flashcard, ser apenas card e mais outros detalhes
 
 function criarFlashcard(p) {
   return `
@@ -174,32 +97,79 @@ function criarFlashcard(p) {
   `;
 }
 
-// tirei esse aqui de dentro do de cima
-// <button class="btn btn-brand w-100 mt-2">
-//              Comprar
-//            </button>
+function buscarPasseiosComIA(query) {
+  let url = `${API_BASE}/api/passeios`;
 
-function buscarPasseios(estado, cidade) {
-  fetch(`${API_BASE}/api/passeios?estado=${estado}&cidade=${cidade}`)
+  fetch(url)
     .then(res => {
-      if (!res.ok) {
-        throw new Error('Erro na API');
-      }
+      if (!res.ok) throw new Error('Erro na API');
       return res.json();
     })
     .then(passeios => {
       if (!Array.isArray(passeios)) {
-        console.error('Resposta inesperada:', passeios);
         renderizarFlashcards([]);
         return;
       }
 
-      renderizarFlashcards(passeios);
+      if (!query) {
+        renderizarFlashcards(passeios);
+        return;
+      }
+
+      // Inteligência Artificial / Palavras-chave: Algoritmo de scoring
+      const stopWords = new Set(['de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para', 'com', 'na', 'no', 'uma', 'os', 'as', 'dos', 'das', 'como', 'quero', 'passeio', 'passeios', 'viagem', 'turismo']);
+      const queryTerms = query.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
+        .split(/\s+/)
+        .filter(t => t.length > 1 && !stopWords.has(t));
+
+      if (queryTerms.length === 0) {
+        queryTerms.push(query.toLowerCase());
+      }
+
+      const scoredPasseios = passeios.map(p => {
+        let score = 0;
+        const local = (p.local || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const desc = (p.descricao || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const cat = (p.categoria || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const cid = (p.cidade || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const est = (p.estado || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        queryTerms.forEach(term => {
+          if (local.includes(term)) {
+            score += 15;
+            if (local.startsWith(term)) score += 5;
+          }
+          if (cat.includes(term)) {
+            score += 12;
+          }
+          if (desc.includes(term)) {
+            const occurrences = desc.split(term).length - 1;
+            score += occurrences * 4;
+          }
+          if (cid.includes(term)) {
+            score += 8;
+          }
+          if (est.includes(term)) {
+            score += 5;
+          }
+        });
+
+        return { passeio: p, score };
+      });
+
+      const resultados = scoredPasseios
+        .filter(sp => sp.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(sp => sp.passeio);
+
+      renderizarFlashcards(resultados);
     })
     .catch(err => {
       console.error(err);
       renderizarFlashcards([]);
     });
 }
+
 
 
