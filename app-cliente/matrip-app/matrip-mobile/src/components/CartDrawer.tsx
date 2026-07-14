@@ -25,16 +25,9 @@ import {
   Wallet,
   Copy,
 } from 'lucide-react-native';
-import type { CartItem, TicketType } from '../types/adventure';
+import type { TicketType } from '../types/adventure';
 import { paymentService, PaymentResponse } from '../services/payment';
-
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  cartItems: CartItem[];
-  onUpdateQuantity: (id: string, delta: number) => void;
-  onRemove: (id: string) => void;
-}
+import { useCartStore } from '../store/useCartStore';
 
 const typeLabel: Record<TicketType, string> = {
   adulto: 'Adulto',
@@ -47,7 +40,9 @@ type PaymentMethod = 'pix' | 'credit' | 'paypal' | null;
 const SERVICE_FEE = 20;
 const formatBRL = (value: number) => `R$ ${value.toFixed(2).replace('.', ',')}`;
 
-export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onRemove }: Props) {
+export default function CartDrawer() {
+  const { cartItems, isCartOpen, setCartOpen, updateQuantity, removeItem, clearCart } = useCartStore();
+  
   const [showPayment, setShowPayment] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(null);
   
@@ -70,10 +65,13 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   };
 
   const handleClose = () => {
+    if (paymentResult) {
+      clearCart();
+    }
     setShowPayment(false);
     setSelectedMethod(null);
     setPaymentResult(null);
-    onClose();
+    setCartOpen(false);
   };
 
   const handleConfirmPayment = async () => {
@@ -131,7 +129,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
   ];
 
   return (
-    <Modal visible={isOpen} animationType="slide" transparent onRequestClose={handleClose}>
+    <Modal visible={isCartOpen} animationType="slide" transparent onRequestClose={handleClose}>
       <View style={styles.overlay}>
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleClose} />
 
@@ -181,14 +179,14 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                           <View style={styles.stepper}>
                             <TouchableOpacity
                               style={styles.stepBtnOutline}
-                              onPress={() => onUpdateQuantity(item.id, -1)}
+                              onPress={() => updateQuantity(cartItems.indexOf(item), -1)}
                             >
                               <Minus size={10} color="#05313d" />
                             </TouchableOpacity>
                             <Text style={styles.stepCount}>{item.quantity}</Text>
                             <TouchableOpacity
                               style={styles.stepBtnFilled}
-                              onPress={() => onUpdateQuantity(item.id, 1)}
+                              onPress={() => updateQuantity(cartItems.indexOf(item), 1)}
                             >
                               <Plus size={10} color="#fff" />
                             </TouchableOpacity>
@@ -197,7 +195,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onUpdateQuantit
                             <Text style={styles.cartItemPrice}>
                               {formatBRL(item.quantity * item.unitPrice)}
                             </Text>
-                            <TouchableOpacity onPress={() => onRemove(item.id)}>
+                            <TouchableOpacity onPress={() => removeItem(cartItems.indexOf(item))}>
                               <Trash2 size={13} color="#94a3b8" />
                             </TouchableOpacity>
                           </View>

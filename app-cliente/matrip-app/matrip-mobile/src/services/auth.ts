@@ -1,9 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
-
-// Importante: Para testar no celular físico via Expo Go (na mesma rede Wi-Fi), o IP deve ser o IPv4 local da sua máquina.
-// O IP atual do seu Wi-Fi é 192.168.3.9. Se estiver rodando no Emulador Android, descomente a linha do 10.0.2.2
-export const API_BASE_URL = Platform.OS === 'android' ? 'http://192.168.3.9:8081/api' : 'http://192.168.3.9:8081/api';
+import { jwtDecode } from 'jwt-decode';
+import { getApiUrl } from './apiConfig';
 
 export interface LoginParams {
   email: string;
@@ -41,7 +38,7 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
     ...options.headers,
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(`${getApiUrl()}${endpoint}`, {
     ...options,
     headers,
   });
@@ -62,6 +59,13 @@ export const authService = {
     });
   },
 
+  async loginWithGoogle(idToken: string): Promise<AuthResponse> {
+    return apiFetch('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ idToken }),
+    });
+  },
+
   async register(params: RegisterParams): Promise<AuthResponse> {
     return apiFetch('/auth/register', {
       method: 'POST',
@@ -75,11 +79,33 @@ export const authService = {
     });
   },
 
+  // Profile Updates via API
+  async updateEmail(newEmail: string): Promise<void> {
+    return apiFetch('/users/update-email', {
+      method: 'PUT',
+      body: JSON.stringify({ newEmail }),
+    });
+  },
+
+  async updatePhone(newPhone: string): Promise<void> {
+    return apiFetch('/users/update-phone', {
+      method: 'PUT',
+      body: JSON.stringify({ newPhone }),
+    });
+  },
+
+  async updatePassword(newPassword: string): Promise<void> {
+    return apiFetch('/users/update-password', {
+      method: 'PUT',
+      body: JSON.stringify({ newPassword }),
+    });
+  },
+
   async logout() {
     await AsyncStorage.removeItem('@Matrip:token');
     await AsyncStorage.removeItem('@Matrip:user');
   },
-  
+
   async saveAuthData(data: AuthResponse) {
     await AsyncStorage.setItem('@Matrip:token', data.token);
     await AsyncStorage.setItem('@Matrip:user', JSON.stringify({
@@ -87,17 +113,20 @@ export const authService = {
       email: data.email
     }));
   },
-  
-  async isAuthenticated(): Promise<boolean> {
-    const token = await AsyncStorage.getItem('@Matrip:token');
-    if (!token) return false;
 
+  async isAuthenticated(): Promise<boolean> {
     try {
-      const payloadBase64 = token.split('.')[1];
-      // Para Base64 no React Native sem atob, podemos usar um helper simples ou buffer.
-      // Aqui usaremos uma forma simples para validar a string se precisar.
-      // Por simplicidade na migração inicial, assumiremos que se o token existe, ele é válido até falhar na API.
-      // Uma biblioteca jwt-decode pode ser adicionada no futuro.
+      const token = await AsyncStorage.getItem('@Matrip:token');
+      if (!token) return false;
+
+      const decoded = jwtDecode<{ exp: number }>(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decoded.exp < currentTime) {
+        await this.logout();
+        return false;
+      }
+
       return true;
     } catch (e) {
       await this.logout();

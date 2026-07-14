@@ -26,12 +26,11 @@ import {
   Info,
 } from 'lucide-react-native';
 import type { Adventure, CartItem, TicketType } from '../types/adventure';
+import { useCartStore } from '../store/useCartStore';
 
 interface Props {
   adventure: Adventure | null;
-  isOpen: boolean;
   onClose: () => void;
-  onAddToCart: (items: CartItem[]) => void;
 }
 
 const TYPES: TicketType[] = ['adulto', 'estudante', 'crianca'];
@@ -51,7 +50,8 @@ function TypeIcon({ type }: { type: TicketType }) {
   return <Baby size={14} color={color} />;
 }
 
-export default function AdventureDetail({ adventure, isOpen, onClose, onAddToCart }: Props) {
+export default function AdventureDetail({ adventure, onClose }: Props) {
+  const addToCart = useCartStore(state => state.addToCart);
   const [quantities, setQuantities] = useState<Record<TicketType, number>>({
     adulto: 0,
     estudante: 0,
@@ -71,17 +71,17 @@ export default function AdventureDetail({ adventure, isOpen, onClose, onAddToCar
   const total = TYPES.reduce((sum, t) => sum + quantities[t] * adventure.prices[t], 0);
 
   const handleAdd = () => {
-    const items: CartItem[] = TYPES.filter((t) => quantities[t] > 0).map((t) => ({
-      id: `${adventure.id}-${t}`,
-      adventureId: adventure.id,
-      title: adventure.title,
-      image: adventure.image,
-      type: t,
-      quantity: quantities[t],
-      unitPrice: adventure.prices[t],
-    }));
-    if (items.length === 0) return;
-    onAddToCart(items);
+    TYPES.filter((t) => quantities[t] > 0).forEach((t) => {
+      addToCart({
+        id: `${adventure.id}-${t}`,
+        adventureId: adventure.id,
+        title: adventure.title,
+        image: adventure.image,
+        type: t,
+        quantity: quantities[t],
+        unitPrice: adventure.prices[t],
+      });
+    });
     setQuantities({ adulto: 0, estudante: 0, crianca: 0 });
     onClose();
   };
@@ -94,7 +94,7 @@ export default function AdventureDetail({ adventure, isOpen, onClose, onAddToCar
     (adventure.importantInfo && adventure.importantInfo.length > 0);
 
   return (
-    <Modal visible={isOpen} animationType="slide" transparent onRequestClose={resetAndClose}>
+    <Modal visible={!!adventure} animationType="slide" transparent onRequestClose={resetAndClose}>
       <View style={styles.overlay}>
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={resetAndClose} />
 

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class PaymentController {
 
     @PostMapping("/checkout")
     public ResponseEntity<PaymentResponseDTO> checkout(
-            @RequestBody CheckoutRequestDTO request,
+            @Valid @RequestBody CheckoutRequestDTO request,
             Authentication authentication) {
         
         String userEmail = authentication.getName(); // assuming JWT subject is email

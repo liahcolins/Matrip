@@ -2,13 +2,51 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react-native';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 import { authService } from '../services/auth';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || 'dummy-id',
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  });
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      const idToken = id_token || response.authentication?.idToken;
+      
+      if (idToken) {
+        handleGoogleLogin(idToken);
+      } else {
+        Alert.alert('Erro', 'Google não retornou o token de ID esperado.');
+      }
+    } else if (response?.type === 'error') {
+      Alert.alert('Erro do Google', response.error?.message || 'Falha ao processar o login.');
+    }
+  }, [response]);
+
+  const handleGoogleLogin = async (idToken: string) => {
+    setIsLoading(true);
+    try {
+      const authResponse = await authService.loginWithGoogle(idToken);
+      await authService.saveAuthData(authResponse);
+      navigation.replace('Home');
+    } catch (error: any) {
+      Alert.alert('Erro', 'Falha no login com Google.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) return;
@@ -118,9 +156,13 @@ export default function LoginScreen({ navigation }: any) {
               <View style={styles.dividerLine} />
             </View>
 
-            {/* Google Button Mock */}
-            <TouchableOpacity style={styles.googleButton}>
-              <Text style={styles.googleButtonText}>G</Text>
+            {/* Google Button */}
+            <TouchableOpacity 
+              style={styles.googleButton} 
+              onPress={() => promptAsync()}
+              disabled={!request || isLoading}
+            >
+              <Image source={require('../../assets/google_logo.png')} style={styles.googleIcon} />
               <Text style={styles.googleButtonLabel}>Continuar com Google</Text>
             </TouchableOpacity>
 
@@ -299,11 +341,11 @@ const styles = StyleSheet.create({
     borderColor: '#e2e8f0',
     backgroundColor: '#fff',
   },
-  googleButtonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#4285F4',
+  googleIcon: {
+    width: 24,
+    height: 24,
     marginRight: 12,
+    resizeMode: 'contain',
   },
   googleButtonLabel: {
     fontSize: 14,

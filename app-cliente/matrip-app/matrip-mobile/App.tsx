@@ -9,6 +9,9 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SplashScreen from './src/screens/SplashScreen';
+import MyTripsScreen from './src/screens/MyTripsScreen';
+import FavoritesScreen from './src/screens/FavoritesScreen';
+import FAQScreen from './src/screens/FAQScreen';
 
 import { authService } from './src/services/auth';
 
@@ -36,6 +39,9 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="MyTrips" component={MyTripsScreen} />
+        <Stack.Screen name="Favorites" component={FavoritesScreen} />
+        <Stack.Screen name="FAQ" component={FAQScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

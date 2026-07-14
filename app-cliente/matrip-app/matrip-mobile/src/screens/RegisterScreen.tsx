@@ -17,6 +17,13 @@ const isValidCPF = (cpf: string) => {
   return digits.length === 11;
 };
 
+const isValidPassword = (pass: string) => {
+  return pass.length >= 6 && 
+         /[a-zA-Z]/.test(pass) && 
+         /[0-9]/.test(pass) && 
+         /[^a-zA-Z0-9]/.test(pass);
+};
+
 export default function RegisterScreen({ navigation }: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +39,7 @@ export default function RegisterScreen({ navigation }: any) {
     name.trim().length > 0 &&
     email.includes("@") &&
     isValidCPF(cpf) &&
-    password.length >= 6 &&
+    isValidPassword(password) &&
     password === confirm &&
     !isLoading;
 
@@ -179,8 +186,8 @@ export default function RegisterScreen({ navigation }: any) {
                   {showPassword ? <EyeOff size={20} color="#94a3b8" /> : <Eye size={20} color="#94a3b8" />}
                 </TouchableOpacity>
               </View>
-              {password.length > 0 && password.length < 6 && (
-                <Text style={styles.errorText}>A senha deve ter pelo menos 6 caracteres</Text>
+              {password.length > 0 && !isValidPassword(password) && (
+                <Text style={styles.errorText}>A senha deve ter no mínimo 6 caracteres, contendo letras, números e símbolos.</Text>
               )}
             </View>
 

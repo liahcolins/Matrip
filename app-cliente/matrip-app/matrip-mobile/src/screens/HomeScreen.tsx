@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   TextInput,
   useWindowDimensions,
+  type NativeSyntheticEvent,
   type NativeScrollEvent,
   FlatList,
   Animated,
+  Easing,
 } from 'react-native';
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
@@ -24,48 +26,38 @@ import {
   MapPin,
   ChevronLeft,
   ChevronRight,
+  Anchor,
+  Heart,
 } from 'lucide-react-native';
 import type { Adventure, CartItem, TicketType } from '../types/adventure';
 import {
-  slides,
-  adventures,
-  culinaryAdventures,
-  culturalAdventures,
   partnerImages,
+  adventures as mockAdventures,
+  culinaryAdventures as mockCulinary,
+  culturalAdventures as mockCultural
 } from '../data/mockData';
+// import { fetchAdventures } from '../services/adventure';
 import AdventureDetail from '../components/AdventureDetail';
 import CartDrawer from '../components/CartDrawer';
+import { useCartStore } from '../store/useCartStore';
+import { useFavoritesStore } from '../store/useFavoritesStore';
 
 const PRIMARY = '#05313d';
 const YELLOW = '#f4c430';
 const ORANGE = '#f97316';
+const DANGER = '#dc2626';
 
 const formatBRL = (value: number) => `R$ ${value.toFixed(2).replace('.', ',')}`;
 
-// ── Cart helpers ─────────────────────────────────────────
-function mergeCart(prev: CartItem[], newItems: CartItem[]): CartItem[] {
-  const map = new Map(prev.map((i) => [i.id, { ...i }]));
-  newItems.forEach((item) => {
-    const existing = map.get(item.id);
-    if (existing) {
-      existing.quantity += item.quantity;
-    } else {
-      map.set(item.id, { ...item });
-    }
-  });
-  return Array.from(map.values());
-}
-
-// ── Header ───────────────────────────────────────────────
 function Header({
-  totalCartCount,
   onOpenCart,
   onOpenProfile,
 }: {
-  totalCartCount: number;
   onOpenCart: () => void;
   onOpenProfile: () => void;
 }) {
+  const cartItems = useCartStore(state => state.cartItems);
+  const totalCartCount = cartItems.reduce((s, i) => s + i.quantity, 0);
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
@@ -92,20 +84,46 @@ function Header({
 }
 
 // ── Hero carousel ────────────────────────────────────────
-function HeroCarousel({ onSelect }: { onSelect: (a: Adventure) => void }) {
+function HeroCarousel({ onSelect, allAdventures }: { onSelect: (a: Adventure) => void, allAdventures: Adventure[] }) {
   const { width } = useWindowDimensions();
   const [index, setIndex] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const currentIndexRef = useRef(0);
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const i = Math.round(e.nativeEvent.contentOffset.x / width);
-    if (i !== index) setIndex(i);
+    if (i !== index) {
+      setIndex(i);
+    }
+    currentIndexRef.current = i;
   };
 
-  const allAdventures = [...adventures, ...culinaryAdventures, ...culturalAdventures];
+  // Generate slides dynamically from the first 3 adventures
+  const slides = allAdventures.slice(0, 3).map((a, i) => ({
+    id: i,
+    adventureId: a.id,
+    image: a.image,
+    icon: Anchor,
+    category: a.category,
+    title: a.title,
+    location: a.location,
+  }));
+
+  React.useEffect(() => {
+    if (slides.length === 0) return;
+    const interval = setInterval(() => {
+      let nextIndex = currentIndexRef.current + 1;
+      if (nextIndex >= slides.length) nextIndex = 0;
+      
+      scrollViewRef.current?.scrollTo({ x: nextIndex * width, animated: true });
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [width, slides.length]);
 
   return (
     <View>
       <ScrollView
+        ref={scrollViewRef}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
@@ -154,8 +172,7 @@ function HeroCarousel({ onSelect }: { onSelect: (a: Adventure) => void }) {
 }
 
 // ── Search bar (visual) ──────────────────────────────────
-function SearchBar() {
-  const [query, setQuery] = useState('');
+function SearchBar({ query, onChangeQuery }: { query: string, onChangeQuery: (q: string) => void }) {
   return (
     <View style={styles.searchWrapper}>
       <View style={styles.searchBox}>
@@ -165,7 +182,7 @@ function SearchBar() {
           placeholder="Para onde você quer ir?"
           placeholderTextColor="#94a3b8"
           value={query}
-          onChangeText={setQuery}
+          onChangeText={onChangeQuery}
         />
       </View>
     </View>
@@ -188,14 +205,15 @@ function AdventureList({
   const CARD_WIDTH = 300;
   const SPACING = 16;
   const SNAP_INTERVAL = CARD_WIDTH + SPACING;
-  
-  const MULTIPLIER = 50;
-  const infiniteData = Array(MULTIPLIER).fill(data).flat();
-  const middleIndex = Math.floor(MULTIPLIER / 2) * data.length;
+  const REPEAT_COUNT = 100;
+  const infiniteData = React.useMemo(() => Array(REPEAT_COUNT).fill(data).flat(), [data]);
+  const MIDDLE_INDEX = Math.floor(REPEAT_COUNT / 2) * data.length + Math.floor(data.length / 2);
 
   const flatListRef = useRef<any>(null);
-  const scrollX = useRef(new Animated.Value(middleIndex * SNAP_INTERVAL)).current;
-  const currentIndexRef = useRef(middleIndex);
+  const scrollX = useRef(new Animated.Value(MIDDLE_INDEX * SNAP_INTERVAL)).current;
+  const currentIndexRef = useRef(MIDDLE_INDEX);
+  
+  const { isFavorite, toggleFavorite } = useFavoritesStore();
 
   React.useEffect(() => {
     const id = scrollX.addListener(({ value }) => {
@@ -224,6 +242,7 @@ function AdventureList({
         <Animated.FlatList
           ref={flatListRef}
           data={infiniteData}
+          initialScrollIndex={MIDDLE_INDEX}
           keyExtractor={(_, index) => index.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -231,7 +250,6 @@ function AdventureList({
           decelerationRate="fast"
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          initialScrollIndex={middleIndex}
           getItemLayout={(data, index) => ({
             length: SNAP_INTERVAL,
             offset: SNAP_INTERVAL * index,
@@ -271,7 +289,19 @@ function AdventureList({
                 ]}
                 onPress={() => onSelect(adventure)}
               >
-                <Image source={adventure.image} style={styles.cardImage} />
+                <View>
+                  <Image source={adventure.image} style={styles.cardImage} />
+                  <TouchableOpacity 
+                    style={styles.heartBtn}
+                    onPress={() => toggleFavorite(adventure)}
+                  >
+                    <Heart 
+                      size={20} 
+                      color={isFavorite(adventure.id) ? DANGER : '#94a3b8'} 
+                      fill={isFavorite(adventure.id) ? DANGER : 'transparent'} 
+                    />
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.cardBody}>
                   <Text style={styles.cardTitle} numberOfLines={2}>
                     {adventure.title}
@@ -341,20 +371,88 @@ function AdventureList({
 
 // ── Partners carousel ────────────────────────────────────
 function PartnersCarousel() {
+  const translateX = useRef(new Animated.Value(0)).current;
+  const animRef = useRef<Animated.CompositeAnimation | null>(null);
+  const currentPosRef = useRef(0);
+  
+  // 9 imagens, 90px de largura + 12px de margin = 102px por item
+  // 9 * 102 = 918
+  const TOTAL_WIDTH = 918;
+
+  React.useEffect(() => {
+    const id = translateX.addListener(({ value }) => {
+      currentPosRef.current = value;
+    });
+    return () => {
+      translateX.removeListener(id);
+    };
+  }, [translateX]);
+
+  const startAnimation = (currentPos = 0) => {
+    if (currentPos === 0) {
+      translateX.setValue(0);
+      animRef.current = Animated.loop(
+        Animated.timing(translateX, {
+          toValue: -TOTAL_WIDTH,
+          duration: 12000,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        })
+      );
+      animRef.current.start();
+    } else {
+      const distanceLeft = TOTAL_WIDTH + currentPos; 
+      const duration = (distanceLeft / TOTAL_WIDTH) * 12000;
+      
+      animRef.current = Animated.timing(translateX, {
+        toValue: -TOTAL_WIDTH,
+        duration: duration,
+        useNativeDriver: true,
+        easing: Easing.linear,
+      });
+      
+      animRef.current.start(({ finished }) => {
+        if (finished) {
+          startAnimation(0);
+        }
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    startAnimation(0);
+    return () => {
+      animRef.current?.stop();
+    };
+  }, []);
+
+  const handleTouchStart = () => {
+    animRef.current?.stop();
+  };
+
+  const handleTouchEnd = () => {
+    startAnimation(currentPosRef.current);
+  };
+
+  const displayImages = [...partnerImages, ...partnerImages];
+
   return (
     <View style={styles.listSection}>
       <Text style={styles.listTitle}>Parceiros</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.partnersContent}
+      <View
+        style={{ overflow: 'hidden' }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
       >
-        {partnerImages.map((img, i) => (
-          <View key={i} style={styles.partnerCard}>
-            <Image source={img} style={styles.partnerImage} />
-          </View>
-        ))}
-      </ScrollView>
+        <Animated.View style={[styles.partnersContent, { flexDirection: 'row', transform: [{ translateX }] }]}>
+          {displayImages.map((img, i) => (
+            <View key={i} style={styles.partnerCard}>
+              <Image source={img} style={styles.partnerImage} />
+            </View>
+          ))}
+        </Animated.View>
+      </View>
     </View>
   );
 }
@@ -370,17 +468,27 @@ function Footer() {
   );
 }
 
-// ── Screen ───────────────────────────────────────────────
 export default function HomeScreen({ navigation }: any) {
   const [selectedAdventure, setSelectedAdventure] = useState<Adventure | null>(null);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { setCartOpen, addToCart } = useCartStore();
+  const [query, setQuery] = useState('');
 
-  const totalCartCount = cartItems.reduce((s, i) => s + i.quantity, 0);
+  const allAdventures = [...mockAdventures, ...mockCulinary, ...mockCultural];
 
-  const handleAddToCart = (items: CartItem[]) => {
-    setCartItems((prev) => mergeCart(prev, items));
-  };
+  const adventuresList = mockAdventures.filter(a => 
+    a.location.toLowerCase().includes(query.toLowerCase()) || 
+    a.title.toLowerCase().includes(query.toLowerCase())
+  );
+  
+  const culinaryList = mockCulinary.filter(a => 
+    a.location.toLowerCase().includes(query.toLowerCase()) || 
+    a.title.toLowerCase().includes(query.toLowerCase())
+  );
+  
+  const culturalList = mockCultural.filter(a => 
+    a.location.toLowerCase().includes(query.toLowerCase()) || 
+    a.title.toLowerCase().includes(query.toLowerCase())
+  );
 
   const handleAddOneAdult = (adventure: Adventure) => {
     const item: CartItem = {
@@ -392,51 +500,46 @@ export default function HomeScreen({ navigation }: any) {
       quantity: 1,
       unitPrice: adventure.prices.adulto,
     };
-    setCartItems((prev) => mergeCart(prev, [item]));
-  };
-
-  const handleUpdateQuantity = (id: string, delta: number) => {
-    setCartItems((prev) =>
-      prev
-        .map((item) => (item.id === id ? { ...item, quantity: item.quantity + delta } : item))
-        .filter((item) => item.quantity > 0)
-    );
-  };
-
-  const handleRemove = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    addToCart(item);
   };
 
   return (
     <View style={styles.container}>
       <Header
-        totalCartCount={totalCartCount}
         onOpenCart={() => setCartOpen(true)}
         onOpenProfile={() => navigation.navigate('Profile')}
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <HeroCarousel onSelect={setSelectedAdventure} />
-        <SearchBar />
+        <HeroCarousel onSelect={setSelectedAdventure} allAdventures={allAdventures} />
+        <SearchBar query={query} onChangeQuery={setQuery} />
 
-        <AdventureList
-          title="Aventuras"
-          data={adventures}
-          onSelect={setSelectedAdventure}
-          onAddOneAdult={handleAddOneAdult}
-        />
-        <AdventureList
-          title="Culinária"
-          data={culinaryAdventures}
-          onSelect={setSelectedAdventure}
-          onAddOneAdult={handleAddOneAdult}
-        />
-        <AdventureList
-          title="Cultural"
-          data={culturalAdventures}
-          onSelect={setSelectedAdventure}
-          onAddOneAdult={handleAddOneAdult}
-        />
+        {adventuresList.length > 0 && (
+          <AdventureList
+            title="Aventuras"
+            data={adventuresList}
+            onSelect={setSelectedAdventure}
+            onAddOneAdult={handleAddOneAdult}
+          />
+        )}
+        
+        {culinaryList.length > 0 && (
+          <AdventureList
+            title="Culinária"
+            data={culinaryList}
+            onSelect={setSelectedAdventure}
+            onAddOneAdult={handleAddOneAdult}
+          />
+        )}
+        
+        {culturalList.length > 0 && (
+          <AdventureList
+            title="Cultural"
+            data={culturalList}
+            onSelect={setSelectedAdventure}
+            onAddOneAdult={handleAddOneAdult}
+          />
+        )}
 
         <PartnersCarousel />
         <Footer />
@@ -444,18 +547,10 @@ export default function HomeScreen({ navigation }: any) {
 
       <AdventureDetail
         adventure={selectedAdventure}
-        isOpen={!!selectedAdventure}
         onClose={() => setSelectedAdventure(null)}
-        onAddToCart={handleAddToCart}
       />
 
-      <CartDrawer
-        isOpen={cartOpen}
-        onClose={() => setCartOpen(false)}
-        cartItems={cartItems}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemove={handleRemove}
-      />
+      <CartDrawer />
     </View>
   );
 }
@@ -560,6 +655,18 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   cardImage: { width: '100%', height: 160, resizeMode: 'cover' },
+  heartBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: '#fff',
+    padding: 8,
+    borderRadius: 999,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
   cardBody: { padding: 12, flex: 1 },
   cardTitle: { fontSize: 14, fontWeight: 'bold', color: '#0f172a', textAlign: 'center', marginBottom: 4 },
   cardDescription: { fontSize: 12, color: '#64748b', textAlign: 'center', marginBottom: 8 },
@@ -591,15 +698,16 @@ const styles = StyleSheet.create({
   buyBtnText: { color: '#fff', fontSize: 12, fontWeight: 'bold' },
 
   // Partners
-  partnersContent: { paddingHorizontal: 16, gap: 12 },
+  partnersContent: { paddingHorizontal: 16 },
   partnerCard: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e2e8f0',
     backgroundColor: '#fff',
+    marginRight: 12,
   },
   partnerImage: { width: '100%', height: '100%', resizeMode: 'cover' },
 
