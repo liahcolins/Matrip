@@ -32,14 +32,22 @@ async function carregarCategorias() {
         }
 
         categorias.forEach(cat => {
+            const isBloqueado = cat.status === 'bloqueado';
+            const badge = isBloqueado 
+                ? `<span class="status-badge inativo" style="background:#fee2e2; color:#b91c1c; padding:3px 8px; border-radius:5px; font-size:12px; font-weight:bold;">Bloqueado</span>`
+                : `<span class="status-badge ativo">Ativo</span>`;
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${cat.nome}</strong></td>
-                <td><span class="status-badge ativo">Ativo</span></td>
+                <td>${badge}</td>
                 <td style="text-align: right;">
                     <div class="table-actions" style="justify-content: flex-end;">
-                        <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(${cat.id}, '${cat.nome}', '0')">
+                        <button class="btn-action btn-edit" onclick="prepararEdicaoCategoria(${cat.id}, '${cat.nome.replace(/'/g, "\\'")}', '${isBloqueado ? 1 : 0}')">
                             <span class="material-symbols-outlined">edit</span>
+                        </button>
+                        <button class="btn-action btn-block" onclick="bloquearCategoria(${cat.id})" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;" title="Bloquear/Desbloquear">
+                            <span class="material-symbols-outlined">block</span>
                         </button>
                     </div>
                 </td>
@@ -100,23 +108,24 @@ document.getElementById('formCadastrarCategoria')?.addEventListener('submit', as
     }
 
     try {
-        if (modoEdicaoCategoria) {
-            // Edição simulada ou PUT se implementado futuramente
-            alert(`Edição de categoria não disponível na API.`);
-        } else {
-            const res = await fetch(`${API_BASE}/categorias`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome })
-            });
+        const url = modoEdicaoCategoria 
+            ? `${API_BASE}/categorias/${idCategoriaEditando}` 
+            : `${API_BASE}/categorias`;
+        
+        const metodo = modoEdicaoCategoria ? 'PUT' : 'POST';
 
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.error || "Erro ao cadastrar categoria");
-            }
+        const res = await fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome })
+        });
 
-            alert("Categoria cadastrada com sucesso!");
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.error || "Erro ao salvar categoria");
         }
+
+        alert(modoEdicaoCategoria ? "Categoria atualizada com sucesso!" : "Categoria cadastrada com sucesso!");
         
         resetarFormCategoria();
         carregarCategorias();
@@ -129,3 +138,23 @@ document.getElementById('formCadastrarCategoria')?.addEventListener('submit', as
 document.addEventListener("DOMContentLoaded", () => {
     carregarCategorias();
 });
+
+// Expor funções globalmente para onclick dos botões HTML
+window.prepararEdicaoCategoria = prepararEdicaoCategoria;
+window.resetarFormCategoria = resetarFormCategoria;
+window.bloquearCategoria = bloquearCategoria;
+
+async function bloquearCategoria(id) {
+    try {
+        const res = await fetch(`${API_BASE}/categorias/${id}/bloquear`, {
+            method: 'PUT'
+        });
+        if (!res.ok) throw new Error("Erro ao alterar status da categoria");
+
+        const data = await res.json();
+        alert(`Categoria alterada para status ${data.status === 'bloqueado' ? 'BLOQUEADO' : 'ATIVO'} com sucesso!`);
+        carregarCategorias();
+    } catch (err) {
+        alert("Erro: " + err.message);
+    }
+}

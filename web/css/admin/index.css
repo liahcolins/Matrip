@@ -1,3 +1,12 @@
+body, input, select, textarea, button, h1, h2, h3, h4, h5, h6, p, td, th, strong, small {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
+
 /* Variáveis de Cores Exclusivas do Admin */
 :root {
   /* Fundo da Sidebar vira Amarelo Escuro */

@@ -75,14 +75,14 @@
               </div>
               <div class="form-actions" style="margin-top: 15px;">
                 <button type="submit" class="primary-btn">Salvar País</button>
-                <button type="button" class="secondary-btn" onclick="toggleFormulario('formPais')">Cancelar</button>
+                <button type="button" class="secondary-btn" onclick="resetarFormPais()">Cancelar</button>
               </div>
             </form>
           </div>
 
           <div class="table-container">
             <table class="admin-table">
-              <thead><tr><th>País</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
+              <thead><tr><th>País</th><th>Status</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
               <tbody id="listaPaises">
                 </tbody>
             </table>
@@ -111,14 +111,14 @@
               </div>
               <div class="form-actions" style="margin-top: 15px;">
                 <button type="submit" class="primary-btn">Salvar Estado</button>
-                <button type="button" class="secondary-btn" onclick="toggleFormulario('formEstado')">Cancelar</button>
+                <button type="button" class="secondary-btn" onclick="resetarFormUF()">Cancelar</button>
               </div>
             </form>
           </div>
 
           <div class="table-container">
             <table class="admin-table">
-              <thead><tr><th>UF</th><th>Estado</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
+              <thead><tr><th>UF</th><th>Estado</th><th>Status</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
               <tbody id="listaEstados">
                 </tbody>
             </table>
@@ -143,14 +143,14 @@
               </div>
               <div class="form-actions" style="margin-top: 15px;">
                 <button type="submit" class="primary-btn">Salvar Cidade</button>
-                <button type="button" class="secondary-btn" onclick="toggleFormulario('formCidade')">Cancelar</button>
+                <button type="button" class="secondary-btn" onclick="resetarFormCidade()">Cancelar</button>
               </div>
             </form>
           </div>
 
           <div class="table-container">
             <table class="admin-table">
-              <thead><tr><th>Cidade</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
+              <thead><tr><th>Cidade</th><th>Status</th><th style="width: 120px; text-align: right;">Ações</th></tr></thead>
               <tbody id="listaCidades">
                 </tbody>
             </table>

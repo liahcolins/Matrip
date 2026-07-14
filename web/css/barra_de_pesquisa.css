@@ -1,19 +1,6 @@
 /* ====== Fonte global ====== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-/* ====== Correção de sobreposição ====== */
-.search-container,
-.search-box,
-.dropdown-menu {
-  position: relative;
-  z-index: 1000;
-}
-
-.dropdown-menu {
-  z-index: 2000 !important;
-}
-
-/* ====== Container central ====== */
 .search-container {
   width: 100%;
   display: flex;
@@ -21,127 +8,64 @@
   align-items: center;
   margin-top: 20px;
   font-family: 'Poppins', sans-serif;
-}
-
-/* ====== Barra de pesquisa ====== */
-.search-box {
-  background: #F7EEE9;
-  border-radius: 28px;
-  padding: 8px 16px;
-  gap: 10px;
-  color: #1b1b1b;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 60%;
-  max-width: 700px;
-  min-width: 300px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  transition: all 0.4s ease;
-  backdrop-filter: blur(4px) saturate(160%);
-}
-
-/* ====== Bandeira ====== */
-.flag {
-  width: 28px;
-  height: 20px;
-  border-radius: 4px;
-  margin-right: 10px;
-  margin-left: 8px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.flag:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 10px rgba(0, 191, 166, 0.5);
-}
-
-/* ====== Botões de UF e Município ====== */
-.search-box .btn {
-  border: none;
-  color: #1b1b1b;
-  font-weight: 500; /* 🟢 peso médio */
-  background: #F7EEE9;
-  border-radius: 25px;
-  padding: 8px 16px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow:
-    3px 3px 6px rgba(0, 0, 0, 0.1),
-    -3px -3px 6px rgba(255, 255, 255, 0.6);
-}
-
-.search-box .btn:hover,
-.search-box .btn:focus {
-  background: #ffffffc9;
-  color: #008b79;
-  box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.15),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
-  transform: translateY(-1px);
-}
-
-/* ====== Dropdown ====== */
-.dropdown-menu {
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  font-size: 0.95rem;
-  font-family: 'Poppins', sans-serif;
-}
-.dropdown-item {
-  color: #1b1b1b;
-  font-weight: 500;
-  transition: background 0.25s ease, color 0.25s ease;
-}
-.dropdown-item:hover {
-  background-color: var(--brand, #00bfa6);
-  color: #fff;
-}
-
-/* ====== Botão de busca (lupa) ====== */
-.btn-brand {
-  background: #F7EEE9;
-  color: #1b1b1b;
-  font-weight: 600; /* 🔥 destaque leve */
-  border-radius: 25px;
-  padding: 7px 18px;
-  font-size: 1rem;
-  transition: all 0.25s ease;
-  box-shadow:
-    3px 3px 6px rgba(0, 0, 0, 0.1),
-    -3px -3px 6px rgba(255, 255, 255, 0.6);
-}
-
-.btn-brand:hover {
-  background: var(--brand-2, #f4c20d);
-  color: #111;
-  transform: translateY(-1px);
-  box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.15),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
-}
-
-.btn-brand:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-/* ====== Ícone da lupa ====== */
-.bi-search {
-  font-size: 1.1rem;
-  vertical-align: middle;
-}
-
-/* ====== Animação ====== */
-.barra-fadein {
   opacity: 0;
   transform: translateY(-6px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.barra-fadein.show {
+
+.search-container.show {
   opacity: 1;
   transform: translateY(0);
 }
+
+.ai-search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 2.5px solid #023847;
+  border-radius: 50px;
+  padding: 6px 6px 6px 18px;
+  width: 90%;
+  max-width: 650px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon-left {
+  color: #64748b;
+  font-size: 1.2rem;
+  margin-right: 12px;
+}
+
+.ai-search-field {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  font-size: 1rem;
+  color: #1e293b;
+  flex-grow: 1;
+  padding: 6px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.ai-search-field::placeholder {
+  color: #94a3b8;
+}
+
+.btn-ai-buscar {
+  background-color: #023847 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 8px 30px !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  transition: background-color 0.2s ease !important;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-ai-buscar:hover {
+  background-color: #0a4f63 !important;
+}
+
+
