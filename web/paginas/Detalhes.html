@@ -54,7 +54,10 @@
         <!-- DESCRIÇÃO -->
         <section class="detalhes-bloco mb-4">
           <h4 class="fw-semibold">Descrição</h4>
-          <p id="passeioDescricao" class="mb-0"></p>
+          <p id="passeioDescricao" class="mb-3"></p>
+          <button id="btnHistoria" class="btn btn-outline-primary" type="button">
+            <i class="fa-solid fa-book-open me-2"></i>Conheça a história deste passeio
+          </button>
         </section>
 
         <!-- INFORMAÇÕES -->
@@ -130,6 +133,23 @@
     </div>
 
   </main>
+
+  <!-- Modal de História -->
+  <div class="modal fade" id="modalHistoria" tabindex="-1" aria-labelledby="modalHistoriaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content" style="border-radius: 18px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="modal-header border-0 pb-0" style="padding: 24px 24px 10px 24px;">
+          <h4 class="modal-title fw-bold text-primary" id="modalHistoriaLabel">História do Passeio</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+          <div id="conteudoHistoria">
+            <!-- Injetado via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="/js/main.js"></script>
   <script src="/js/Detalhes.js"></script>

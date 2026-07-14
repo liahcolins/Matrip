@@ -67,6 +67,9 @@ public class Passeio {
     @Column(name = "informacoes_importantes", columnDefinition = "TEXT")
     private String informacoesImportantes;
 
+    @Column(name = "contexto_historico", columnDefinition = "TEXT")
+    private String contextoHistorico;
+
     public Passeio() {}
 
     public Integer getId() {
@@ -219,5 +222,13 @@ public class Passeio {
 
     public void setInformacoesImportantes(String informacoesImportantes) {
         this.informacoesImportantes = informacoesImportantes;
+    }
+
+    public String getContextoHistorico() {
+        return contextoHistorico;
+    }
+
+    public void setContextoHistorico(String contextoHistorico) {
+        this.contextoHistorico = contextoHistorico;
     }
 }

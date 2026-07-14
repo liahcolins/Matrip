@@ -2,6 +2,7 @@ package com.matrip.controller;
 
 import com.matrip.entity.*;
 import com.matrip.repository.*;
+import com.matrip.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class PasseioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasseioAtracaoRepository passeioAtracaoRepository;
 
     // ==============================
     // CADASTRAR PASSEIO (GUIA) + IMAGENS
@@ -378,5 +382,50 @@ public class PasseioController {
             res.add(map);
         }
         return res;
+    }
+
+    // ==============================
+    // GET PASSEIO HISTORIAS
+    // ==============================
+    @GetMapping("/passeios/{id}/historias")
+    public ResponseEntity<?> obterHistoriasPasseio(@PathVariable Integer id) {
+        Optional<Passeio> optPasseio = passeioRepository.findById(id);
+        if (optPasseio.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Passeio não encontrado"));
+        }
+
+        Passeio p = optPasseio.get();
+        List<PasseioAtracao> passeioAtracoes = passeioAtracaoRepository.findPasseioAtracoesWithDetails(id);
+
+        List<AtracaoHistoriaDTO> atracoesDTO = new ArrayList<>();
+        for (PasseioAtracao pa : passeioAtracoes) {
+            Atracao a = pa.getAtracao();
+            Localidade l = a.getLocalidade();
+
+            AtracaoHistoriaDTO atracaoDTO = new AtracaoHistoriaDTO(
+                a.getNome(),
+                a.getTipo(),
+                a.getDescricao(),
+                a.getHistoria(),
+                a.getCuriosidades(),
+                l != null ? l.getNome() : null,
+                l != null ? l.getHistoria() : null,
+                l != null ? l.getCuriosidades() : null,
+                pa.getOrdemVisita(),
+                pa.getObservacao()
+            );
+            atracoesDTO.add(atracaoDTO);
+        }
+
+        PasseioHistoriaDTO dto = new PasseioHistoriaDTO(
+            p.getId(),
+            p.getLocal(),
+            p.getCidade(),
+            p.getDescricao(),
+            p.getContextoHistorico(),
+            atracoesDTO
+        );
+
+        return ResponseEntity.ok(dto);
     }
 }

@@ -33,6 +33,11 @@ async function init() {
     const btn = document.getElementById('btnComprar');
     if (btn) btn.addEventListener('click', () => comprarPasseio(passeio, id));
 
+    const btnHistoria = document.getElementById('btnHistoria');
+    if (btnHistoria) {
+      btnHistoria.addEventListener('click', () => abrirModalHistoria(id, passeio.local));
+    }
+
   } catch (err) {
     console.error(err);
     setText('passeioTitulo', 'Erro ao carregar passeio');
@@ -566,4 +571,129 @@ function prepararAlinhamentoReserva() {
   window.addEventListener('load', alinharReservaComCarrossel);
 }
 prepararAlinhamentoReserva();
+
+async function abrirModalHistoria(passeioId, passeioLocal) {
+  const modalEl = document.getElementById('modalHistoria');
+  if (!modalEl) return;
+  
+  const labelEl = document.getElementById('modalHistoriaLabel');
+  if (labelEl) {
+    labelEl.textContent = `História do Passeio: ${passeioLocal || 'Passeio'}`;
+  }
+
+  const modal = new bootstrap.Modal(modalEl);
+  const conteudo = document.getElementById('conteudoHistoria');
+  if (!conteudo) return;
+
+  conteudo.innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+  `;
+
+  modal.show();
+
+  try {
+    const res = await fetch(`${API_URL}/passeios/${passeioId}/historias`);
+    if (!res.ok) throw new Error('Não foi possível obter a história deste passeio.');
+
+    const dados = await res.json();
+    let html = '';
+
+    if (dados.contexto_historico) {
+      html += `
+        <div class="caixa-atracao shadow-sm mb-4">
+          <h5 class="fw-bold mb-2"><i class="fa-solid fa-landmark me-2" style="color: #00bfa6;"></i>Contexto Histórico</h5>
+          <p class="mb-0 text-secondary" style="font-style: italic; white-space: pre-line;">${escapeHtml(dados.contexto_historico)}</p>
+        </div>
+      `;
+    }
+
+    if (dados.atracoes && dados.atracoes.length > 0) {
+      html += `<h5 class="fw-bold mb-3 mt-4" style="color: #003543;"><i class="fa-solid fa-route me-2" style="color: #00bfa6;"></i>História das Atrações (Roteiro de Visitação)</h5>`;
+      html += `<div class="timeline ps-2">`;
+
+      dados.atracoes.forEach(atracao => {
+        const obsHtml = atracao.observacao
+          ? `<p class="small text-muted mt-2 mb-0"><strong>Observação:</strong> ${escapeHtml(atracao.observacao)}</p>`
+          : '';
+
+        const curiosidadeHtml = atracao.curiosidades
+          ? `
+            <div class="caixa-curiosidade shadow-sm">
+              <small class="fw-bold"><i class="fa-solid fa-lightbulb me-1"></i> Você sabia?</small>
+              <p class="small text-secondary mb-0 mt-1" style="white-space: pre-line;">${escapeHtml(atracao.curiosidades)}</p>
+            </div>
+          `
+          : '';
+
+        const localidadeHtml = atracao.localidade_historia
+          ? `
+            <div class="caixa-localidade shadow-sm">
+              <small class="fw-bold"><i class="fa-solid fa-map-location-dot me-1"></i> História da Localidade (${escapeHtml(atracao.localidade_nome)})</small>
+              <p class="small text-secondary mb-0 mt-1" style="white-space: pre-line;">${escapeHtml(atracao.localidade_historia)}</p>
+              ${atracao.localidade_curiosidades ? `
+                <hr class="my-2 opacity-25" style="border-color: #15803d;">
+                <small class="fw-bold"><i class="fa-solid fa-face-smile me-1"></i> Curiosidades da Localidade</small>
+                <p class="small text-secondary mb-0 mt-1" style="white-space: pre-line;">${escapeHtml(atracao.localidade_curiosidades)}</p>
+              ` : ''}
+            </div>
+          `
+          : '';
+
+        html += `
+          <div class="timeline-item mb-4 pb-4 border-bottom">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="fw-bold text-dark mb-0" style="font-size: 1.1rem;">
+                <span class="badge badge-parada me-2">${atracao.ordem_visita}° Parada</span>
+                ${escapeHtml(atracao.nome)}
+                <span class="badge badge-tipo ms-1 fw-normal text-capitalize fs-6" style="font-size: 0.8rem !important;">${escapeHtml(atracao.tipo || 'atração')}</span>
+              </h5>
+            </div>
+
+            <p class="text-secondary mb-3 small" style="white-space: pre-line;">${escapeHtml(atracao.descricao || '')}</p>
+
+            ${atracao.historia ? `
+              <div class="caixa-atracao shadow-sm mb-2">
+                <h6 class="fw-bold mb-1" style="font-size: 0.9rem;">História da Atração</h6>
+                <p class="mb-0 text-secondary-emphasis small" style="white-space: pre-line;">${escapeHtml(atracao.historia)}</p>
+              </div>
+            ` : ''}
+
+            ${curiosidadeHtml}
+            ${localidadeHtml}
+            ${obsHtml}
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+    } else {
+      if (!dados.contexto_historico) {
+        html += `<p class="text-muted text-center my-4">Nenhuma história ou atração histórica cadastrada para este passeio.</p>`;
+      }
+    }
+
+    conteudo.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    conteudo.innerHTML = `
+      <div class="alert alert-danger text-center" role="alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i> ${err.message || 'Erro ao carregar histórias.'}
+      </div>
+    `;
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 

@@ -302,3 +302,152 @@
 .card-reserva .small{
   color: rgba(0,0,0,.6) !important;
 }
+
+/* ===========================
+   MELHORIAS ESTÉTICAS (POPUP & BOTÕES)
+   =========================== */
+
+/* Botão de reservar/comprar */
+.card-reserva .btn.btn-primary {
+  background: linear-gradient(135deg, #00bfa6, #008b79) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 800;
+  box-shadow: 0 10px 22px rgba(0, 191, 166, 0.25) !important;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.card-reserva .btn.btn-primary:hover {
+  background: linear-gradient(135deg, #00d9b3, #009c87) !important;
+  box-shadow: 0 12px 26px rgba(0, 191, 166, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Botão Ver História */
+#btnHistoria {
+  background: linear-gradient(135deg, #f4c20d, #e0a905);
+  border: none;
+  color: #111;
+  font-weight: 700;
+  border-radius: 14px;
+  padding: 12px 24px;
+  box-shadow: 0 6px 15px rgba(244, 194, 13, 0.25);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+#btnHistoria:hover {
+  background: linear-gradient(135deg, #ffd129, #f4c20d);
+  box-shadow: 0 8px 20px rgba(244, 194, 13, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Popup / Modal */
+#modalHistoria .modal-content {
+  border-radius: 20px !important;
+  border: none;
+  box-shadow: 0 20px 50px rgba(0, 53, 67, 0.15) !important;
+  background: #ffffff;
+}
+
+#modalHistoria .modal-header {
+  background-color: #003543;
+  color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px 24px;
+}
+
+#modalHistoria .modal-title {
+  color: #f4c20d !important;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+}
+
+#modalHistoria .btn-close {
+  filter: invert(1) grayscale(1) brightness(2);
+}
+
+/* Linha do tempo e caixas do modal */
+.timeline {
+  position: relative;
+  border-left: 2px dashed rgba(0, 189, 166, 0.3);
+  margin-left: 15px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 25px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #00bfa6;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 3px rgba(0, 189, 166, 0.2);
+  z-index: 2;
+}
+
+/* Parada badges */
+.badge-parada {
+  background-color: #00bfa6 !important;
+  color: #fff !important;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.badge-tipo {
+  background-color: #003543 !important;
+  color: #fff !important;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem !important;
+}
+
+/* Caixa História da Atração: Ciano/Verde Forte */
+.caixa-atracao {
+  background-color: #e9f7fa !important;
+  border-left: 4px solid #00bfa6 !important;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.caixa-atracao h6 {
+  color: #005c73 !important;
+  font-weight: 700;
+}
+
+/* Caixa Você Sabia?: Amarelo Queimado */
+.caixa-curiosidade {
+  background-color: #fffbeb !important;
+  border-left: 4px solid #f4c20d !important;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.caixa-curiosidade small {
+  color: #b28900 !important;
+}
+
+/* Caixa História da Localidade */
+.caixa-localidade {
+  background-color: #f0fdf4 !important;
+  border-left: 4px solid #15803d !important;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.caixa-localidade small {
+  color: #166534 !important;
+}
+}
